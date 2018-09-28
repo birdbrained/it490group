@@ -1,0 +1,25 @@
+    1  sudo apt install apache
+    2  sudo apt search apache
+    3  sudo apt install apache2
+    4  sudo apt search git
+    5  sudo apt install git
+    6  sudo apt install gitk
+    7  sudo apt install rabbitmq-server 
+    8  sudo apt update
+   10  sudo apt upgrade
+   11  sudo apt install php
+   12  sudo apt install git
+   13  sudo apt install gitk
+   14  sudo rabbitmq-plugins enable rabbitmq_management
+   15  sudo apt install mysql-common 
+   16  sudo apt install mysql-server
+   18  sudo apt install apache2
+   28  sudo apt install vim
+   35  sudo apt install aptitude
+   37  sudo apt install synaptic
+   38  sudo synaptic
+   40  sudo apt search php-amdq
+   41  sudo apt search php-a
+   42  sudo apt install php-amqp
+   45  history | grep sudo
+   46  history | grep sudo > sudofile.text
