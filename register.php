@@ -1,6 +1,6 @@
 <?php
 
-$database = mysqli_connect('192.168.1.9', 'user', 'Pasta_Fazool!?', 'testDatabase', '3306');
+$database = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'testDatabase', '3306');
 
 if ($database->errno != 0)
 {
