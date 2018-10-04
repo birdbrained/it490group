@@ -4,31 +4,38 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-//($mydb = mysqli_connect('192.168.1.10', 'user', 'password', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
-global $mydb;
-($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
-if ($mydb->errno != 0)
+class DBi
 {
-	echo "you fail: ".$mydb->error.PHP_EOL;
-	exit(0);
+	public static $mydb;
 }
 
-function doLogin($database,$u,$p)
+(DBi::$mydb = mysqli_connect('192.168.1.9', 'user', 'password', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
+
+//($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
+if (DBi::$mydb->errno != 0)
 {
-	$p = mysqli_real_escape_string ($database,$p);
+	echo "you fail: ".DBi::$mydb->error.PHP_EOL;
+	exit(0);
+}
+echo "mysqli connected.\n";
+
+function doLogin($database,$e,$u,$p)
+{
+	$p = mysqli_real_escape_string($database,$p);
 
 
 	$u = mysqli_real_escape_string($database,$u);
 
-	$s = "select * from testTable where user = '$u' and password = '$p'";
-
+	$s = "select * from testTable where username = '$u' and password = '$p'";
+	//$s = "insert into testTable values('$e', '$u', '$p')";
+	echo "about to make a query with '$u', '$p', '$e'\n";
 	$t = mysqli_query($database, $s) or die(mysqli_error($database));
 
 	if (mysqli_num_rows($t) > 0)
 
 	{ 
 
-		echo "Yaaay" . PHP_EOL;
+		echo "Found user '$u' with password '$p' and email '$e'" . PHP_EOL;
 		return true;
 
 	}
@@ -42,20 +49,23 @@ function doLogin($database,$u,$p)
 
 function requestProcessor($request)
 {
-  echo "received request".PHP_EOL;
-  var_dump($request);
-  if(!isset($request['type']))
-  {
-    return "ERROR: unsupported message type";
-  }
-  switch ($request['type'])
-  {
-    case "login":
-      return doLogin($mydb, $request['username'],$request['password']);
-    case "validate_session":
-      return doValidate($request['sessionId']);
-  }
-  return array("returnCode" => '0', 'message'=>"Server received request and processed");
+	echo "received request of type: $re".PHP_EOL;
+	var_dump($request);
+	if(!isset($request['type']))
+	{
+		return "ERROR: unsupported message type";
+	}
+	switch ($request['type'])
+	{
+	case "login":
+		doLogin(DBi::$mydb, $request['email'], $request['username'],$request['password']);
+		break;
+	case "validate_session":
+		return doValidate($request['sessionId']);
+		break;
+	}
+	echo "done with request.\n";
+	return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
