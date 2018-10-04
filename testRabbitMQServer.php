@@ -9,7 +9,7 @@ class DBi
 	public static $mydb;
 }
 
-(DBi::$mydb = mysqli_connect('192.168.137.145', 'user', 'password', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
+(DBi::$mydb = mysqli_connect('192.168.1.9', 'user', 'password', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
 
 //($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
 if (DBi::$mydb->errno != 0)
@@ -17,17 +17,18 @@ if (DBi::$mydb->errno != 0)
 	echo "you fail: ".DBi::$mydb->error.PHP_EOL;
 	exit(0);
 }
+echo "mysqli connected.\n";
 
 function doLogin($database,$e,$u,$p)
 {
-	$p = mysqli_real_escape_string ($database,$p);
+	$p = mysqli_real_escape_string($database,$p);
 
 
 	$u = mysqli_real_escape_string($database,$u);
 
 	$s = "select * from testTable where username = '$u' and password = '$p'";
 	//$s = "insert into testTable values('$e', '$u', '$p')";
-
+	echo "about to make a query with '$u', '$p', '$e'\n";
 	$t = mysqli_query($database, $s) or die(mysqli_error($database));
 
 	if (mysqli_num_rows($t) > 0)
@@ -48,7 +49,7 @@ function doLogin($database,$e,$u,$p)
 
 function requestProcessor($request)
 {
-	echo "received request".PHP_EOL;
+	echo "received request of type: $re".PHP_EOL;
 	var_dump($request);
 	if(!isset($request['type']))
 	{
@@ -63,6 +64,7 @@ function requestProcessor($request)
 		return doValidate($request['sessionId']);
 		break;
 	}
+	echo "done with request.\n";
 	return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 

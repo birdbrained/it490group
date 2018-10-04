@@ -1,6 +1,6 @@
 <?php
 
-$database = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'testDatabase', '3306');
+$database = mysqli_connect('192.168.1.9', 'user', 'password', 'testDatabase', '3306');
 
 if ($database->errno != 0)
 {
@@ -11,7 +11,7 @@ $query = "select * from testTable;";
 $response = $database->query($query);
 while ($row = mysqli_fetch_array($response, MYSQLI_ASSOC))
 {
-	$username = $row["user"];
+	$username = $row["username"];
 	$email = $row["email"];
 	$password = $row["password"];
 
