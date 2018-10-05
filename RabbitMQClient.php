@@ -41,5 +41,5 @@ echo "client received response: returnCode: " . $response['returnCode'] . " mess
 echo "\n\n";
 
 echo $argv[0]." END".PHP_EOL;
-
+echo "<br> <iframe src=\"Testbuild/index.html\" height=\"100%\" width=\"100%\" ></iframe>";
 
