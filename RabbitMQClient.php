@@ -21,11 +21,12 @@ else
 }
 
 $request = array();
-$request['type'] = "login";
+//$request['type'] = "login";
 //$request['username'] = 'b';
 //$request['password'] = '444';
 //$request['email'] = 'satchel@gmail';
 
+$request['type'] = $_POST['sessionType'];
 $request['username'] = $_POST['username'];
 $request['password'] = $_POST['password'];
 $request['email'] = $_POST['email'];
@@ -35,11 +36,11 @@ $response = "no";
 $response = $client->send_request($request);
 //echo "b\n";
 //$response = $client->publish($request);
-
 echo "client received response: returnCode: " . $response['returnCode'] . " message: " . $response['message'] .PHP_EOL;
-//print_r($response);
 echo "\n\n";
-
-echo $argv[0]." END".PHP_EOL;
-echo "<br> <iframe src=\"Testbuild/index.html\" height=\"100%\" width=\"100%\" ></iframe>";
+if ($response['returnCode'] == 0){
+	//print_r($response);
+	echo $argv[0]." END".PHP_EOL;
+	echo "<br> <iframe src=\"Testbuild/index.html\" height=\"100%\" width=\"100%\" ></iframe>";
+}
 

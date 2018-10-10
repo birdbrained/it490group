@@ -9,7 +9,7 @@ class DBi
 	public static $mydb;
 }
 
-(DBi::$mydb = mysqli_connect('192.168.1.9', 'user', 'password', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
+(DBi::$mydb = mysqli_connect('192.168.137.243', 'user', 'password', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
 
 //($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
 if (DBi::$mydb->errno != 0)
