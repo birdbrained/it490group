@@ -5,7 +5,7 @@
 		<center><h2>IT490 Test Site</h2></center>
 	</head>
 	<body>
-		<p>New user? <a href="register.html">Register here!</a></p>
+		<!--<p>New user? <a href="register.html">Register here!</a></p>-->
 		<form action="RabbitMQClient.php" method="post">
 			Email:<br>
 			<input type="text" name="email"></br>
@@ -13,7 +13,9 @@
 			<input type="text" name="username"></br>
 			Password:<br>
 			<input type="password" name="password"></br>
-			<input type="submit" value="Login"></br>
+			<input type="radio" name="sessionType" value="login">Login<br>
+			<input type="radio" name="sessionType" value="register">Register<br>
+			<input type="submit" value="Continue"></br>
 		</form> 
 	</body>
 </html>
