@@ -3,10 +3,11 @@
 	<head>
 		<title>IT490 Login Test</title>
 		<center><h2>IT490 Test Site</h2></center>
+		<script type="text/javascript" src="loginVal.js"></script>
 	</head>
 	<body>
 		<!--<p>New user? <a href="register.html">Register here!</a></p>-->
-		<form action="RabbitMQClient.php" method="post">
+		<form name="RegLog Form" action="RabbitMQClient.php" method="post" onsubmit="return validateForm()">
 			Email:<br>
 			<input type="text" name="email"></br>
 			Username:<br>
