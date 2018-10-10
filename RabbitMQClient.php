@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+session_start();
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
@@ -30,17 +31,22 @@ $request['type'] = $_POST['sessionType'];
 $request['username'] = $_POST['username'];
 $request['password'] = $_POST['password'];
 $request['email'] = $_POST['email'];
+$_SESSION['type'] = $_POST['sessionType'];
+$_SESSION['username'] = $_POST['username'];
+$_SESSION['password'] = $_POST['password'];
+$_SESSION['email'] = $_POST['email'];
 //echo "a\n";
 $response = "no";
 //$client->process_response($response);
 $response = $client->send_request($request);
 //echo "b\n";
 //$response = $client->publish($request);
+$_SESSION['returnCode'] = $response['returnCode'];
 echo "client received response: returnCode: " . $response['returnCode'] . " message: " . $response['message'] .PHP_EOL;
 echo "\n\n";
 if ($response['returnCode'] == 0){
 	//print_r($response);
 	echo $argv[0]." END".PHP_EOL;
-	echo "<br> <iframe src=\"Testbuild/index.html\" height=\"100%\" width=\"100%\" ></iframe>";
+	header( "referesh:5; url=game.php");
 }
 
