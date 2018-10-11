@@ -47,6 +47,6 @@ echo "\n\n";
 if ($response['returnCode'] == 0){
 	//print_r($response);
 	echo $argv[0]." END".PHP_EOL;
-	header( "referesh:5; url=game.php");
+	header( "refresh:5; url=game.php");
 }
 
