@@ -10,7 +10,7 @@ class DBi
 }
 
 //(DBi::$mydb = mysqli_connect('192.168.1.9', 'user', 'password', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
-(DBi::$mydb = mysqli_connect('192.168.1.16', 'user', 'password', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
+(DBi::$mydb = mysqli_connect('192.168.1.6', 'user', 'password', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
 
 //($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
 if (DBi::$mydb->errno != 0)
@@ -48,10 +48,31 @@ function doLogin($database,$e,$u,$p)
 	}
 }
 
+function doRegister($database, $e, $u, $p)
+{
+	$p = mysqli_real_escape_string($database,$p);
+	$u = mysqli_real_escape_string($database,$u);
+
+	$stmt = "insert into testTable values('$e', '$u', '$p')";
+	$t = mysqli_query($database, $stmt);
+
+	if ($database->errno == 0)
+	{
+		echo "Registering user with email ('$e'), username ('$u'), and password ('$p')\n";
+		return true;
+	}
+	else
+	{
+		echo "Error registering user\n";
+		return false;
+	}
+}
+
 function requestProcessor($request)
 {
 	echo "received request of type: $request".PHP_EOL;
 	var_dump($request);
+	$success = false;
 	if(!isset($request['type']))
 	{
 		return "ERROR: unsupported message type";
@@ -59,13 +80,27 @@ function requestProcessor($request)
 	switch ($request['type'])
 	{
 	case "login":
-		doLogin(DBi::$mydb, $request['email'], $request['username'],$request['password']);
+		$success = doLogin(DBi::$mydb, $request['email'], $request['username'],$request['password']);
+
+		if ($success == false)
+		{
+			return array("returnCode" => '1', "message" => "Invalid login credentials");
+		}
+		break;
+	case "register":
+		$success = doRegister(DBi::$mydb, $request['email'], $request['username'], $request['password']);
+		if ($success == false)
+		{
+			return array("returnCode" => '2', "message" => "Registration error");
+		}
 		break;
 	case "validate_session":
 		return doValidate($request['sessionId']);
 		break;
 	}
 	echo "done with request.\n";
+	if ($success == false)
+		return array("returnCode" => '1', "message" => "Invalid login credentials");
 	return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 

@@ -1,7 +1,6 @@
 <?php
 
 $database = mysqli_connect('192.168.1.6', 'user', 'password', 'testDatabase', '3306');
-
 if ($database->errno != 0)
 {
 	exit(0);
