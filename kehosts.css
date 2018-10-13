@@ -1,4 +1,36 @@
+html
+{
+	background-image: linear-gradient(to bottom right, lightblue, white);
+	height: 600px;
+}
+
 body 
 {
-	background-color: lightblue;
+	font-family: Verdana, sans-serif;
+	text-align: center;
+}
+
+h2
+{
+	font-family: Verdana, sans-serif;
+}
+
+.button
+{
+	background-color: #00238b;
+	border: none;
+	color: white;
+	font-size: 20px;
+	padding: 8px 16px;
+	cursor: pointer;
+}
+
+input[type=text]
+{
+	width: 20%;
+}
+
+input[type=password]
+{
+	width: 20%;
 }
