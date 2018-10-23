@@ -27,8 +27,9 @@ function validateForm()
 	}
 
 	if (errors == "") {
-		return false;
+		return true;
 	}
+
 	else {
 		alert(errors);
 		return false;
