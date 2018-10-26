@@ -4,12 +4,18 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
+function logErrors($request){
+	echo $request['message'].PHP_EOL;
+	file_put_contents('errors/ERROR_LOG.help', $request['message'].PHP_EOL, FILE_APPEND | LOCK_EX);
+}
+
 class DBi
 {
 	public static $mydb;
 }
 
 //(DBi::$mydb = mysqli_connect('192.168.1.9', 'user', 'password', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
+//Ankit DB
 (DBi::$mydb = mysqli_connect('192.168.1.6', 'user', 'password', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
 
 //($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'testDatabase', '3306') ) or die ("failed to connect".PHP_EOL);
@@ -63,7 +69,8 @@ function doRegister($database, $e, $u, $p)
 	}
 	else
 	{
-		echo "Error registering user\n";
+		$request['message'] = "Error registering user";
+		logErrors($request);
 		return false;
 	}
 }
@@ -75,6 +82,8 @@ function requestProcessor($request)
 	$success = false;
 	if(!isset($request['type']))
 	{
+		$request['message'] = "ERROR: unsupported message type";
+		logErrors($request);
 		return "ERROR: unsupported message type";
 	}
 	switch ($request['type'])
@@ -84,6 +93,8 @@ function requestProcessor($request)
 
 		if ($success == false)
 		{
+			$request['message'] = "Invalid login credentials";
+			logErrors($request);			
 			return array("returnCode" => '1', "message" => "Invalid login credentials");
 		}
 		break;
@@ -91,16 +102,28 @@ function requestProcessor($request)
 		$success = doRegister(DBi::$mydb, $request['email'], $request['username'], $request['password']);
 		if ($success == false)
 		{
+			$request['message'] = "Registration error";
+			logErrors($request);						
 			return array("returnCode" => '2', "message" => "Registration error");
 		}
 		break;
 	case "validate_session":
 		return doValidate($request['sessionId']);
 		break;
+	case "error":
+		logErrors($request);
+		return false;		
+		break;
 	}
+	
+
 	echo "done with request.\n";
 	if ($success == false)
+	{
+		$request['message'] = "Invalid login credentials";
+		logErrors($request);				
 		return array("returnCode" => '1', "message" => "Invalid login credentials");
+	}	
 	return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 
