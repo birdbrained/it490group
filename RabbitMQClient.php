@@ -22,15 +22,19 @@ else
 }
 
 $request = array();
-//$request['type'] = "login";
-//$request['username'] = 'b';
-//$request['password'] = '444';
-//$request['email'] = 'satchel@gmail';
+/*
+$request['type'] = "error";
+$request['username'] = 'b';
+$request['password'] = '444';
+$request['email'] = 'satchel@gmail';
+$request['message'] = $msg;
+*/
 
 $request['type'] = $_POST['sessionType'];
 $request['username'] = $_POST['username'];
 $request['password'] = $_POST['password'];
 $request['email'] = $_POST['email'];
+
 $_SESSION['type'] = $_POST['sessionType'];
 $_SESSION['username'] = $_POST['username'];
 $_SESSION['password'] = $_POST['password'];
@@ -48,5 +52,11 @@ if ($response['returnCode'] == 0){
 	//print_r($response);
 	echo $argv[0]." END".PHP_EOL;
 	header( "refresh:5; url=game.php");
+}
+else {
+	$msg= "incorrect response return code";
+	$request['type'] = 'error';
+	$request['message'] = $msg;
+	$client->send_request($request);
 }
 
