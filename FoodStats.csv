@@ -1,0 +1,52 @@
+1|Dough|Base|1|2|2|TRUE|1|Ol\' reliable for your baked goods|Sprites/CardImgs/dough
+2|Egg|Base|2|0|2|TRUE|1|The foundation of life and lunch|Sprites/CardImgs/egg
+3|Potato|Base|1|1|3|TRUE|1|Carbs for days|Sprites/CardImgs/potato
+4|Corn|Base|1|1|3|TRUE|1|Good luck not getting this stuck in your teeth|Sprites/CardImgs/corn
+5|Tofu|Base|0|3|1|TRUE|1|What even is tofu?|Sprites/CardImgs/tofu
+6|Mystery Meat|Base|2|2|2|TRUE|1|We made it and have no idea what it is|Sprites/CardImgs/mysterymeat
+7|Flour|Base|2|2|2|TRUE|1|Grainy|Sprites/CardImgs/flour
+8|Water|Spice|0|0|1|TRUE|1|Pure and refreshing to the core|Sprites/CardImgs/water
+9|Feed|Spice|0|0|2|TRUE|0|Non-GMO nutrients for your stock|Sprites/CardImgs/feed
+10|Maple Syrup|Spice|0|0|4|TRUE|0|Canada\'s greatest export|Sprites/CardImgs/maplesyrup
+11|Tomato Sauce|Spice|0|0|4|TRUE|0|Big Shaq\'s favorite|Sprites/CardImgs/tomatosauce
+12|Horseradish|Spice|0|0|3|TRUE|0|Whoever likes this is a freak|Sprites/CardImgs/horseradish
+13|Salt and Pepper|Spice|0|0|2|TRUE|0|Adding flavor to your life|Sprites/CardImgs/saltandpepper
+14|Onion|Spice|0|0|4|TRUE|0|Who\'s chopping onions?|Sprites/CardImgs/onions
+15|Garlic|Spice|0|0|3|TRUE|0|There\'s never enough garlic|Sprites/CardImgs/garlic
+16|Hawt Sauce|Spice|0|0|5|TRUE|0|The spiciest around|Sprites/CardImgs/hawtsauce
+17|Sugar|Spice|0|0|4|TRUE|0|Sweet and delicious|Sprites/CardImgs/sugar
+18|Cheese|Spice|0|0|3|TRUE|0|Legendary savory flavor-enhancer|Sprites/CardImgs/cheese
+19|Gruel|Monster|2|0|2|FALSE|1|...I guess this is food?|Sprites/CardImgs/gruel
+20|Plain Oatmeal|Monster|4|1|4|FALSE|1|The most boring food of em all|Sprites/CardImgs/plainoatmeal
+21|GDS Slop|Monster|6|2|6|FALSE|1|Just starve|Sprites/CardImgs/gdsslop
+22|Grub|Monster|7|2|7|FALSE|1|Garbage|Sprites/CardImgs/grub
+23|Big Grub|Monster|8|3|8|FALSE|1|Bigger garbage|Sprites/CardImgs/biggrub
+24|Feast|Monster|9|3|9|FALSE|1|That\'s a lot of food...|Sprites/CardImgs/feast
+25|Cauliflower Beast|Monster|10|5|10|FALSE|1|A conglameration of the most bland veggie there is|Sprites/CardImgs/cauliflowerbeast
+26|Omelette|Monster|5|3|6|TRUE|2|Customizable eggs perfect for brunch!|Sprites/CardImgs/omelette
+27|Soup|Monster|6|2|7|TRUE|2|*Slurp* Aaah, nice and warm.|Sprites/CardImgs/soup
+28|Taco|Monster|5|3|8|TRUE|2|Is it Taco Tuesday yet?|Sprites/CardImgs/taco
+29|Waffles|Monster|5|3|6|TRUE|2|""and in the morning, I\'m making waffles""|Sprites/CardImgs/waffles
+30|Chicken|Monster|7|4|8|TRUE|2|The greatest meat....fight me|Sprites/CardImgs/chicken
+31|Pasta|Monster|6|2|7|TRUE|2|The foundation of Italian food|Sprites/CardImgs/pasta
+32|Pizza|Monster|6|1|8|TRUE|2|Best comfort food around |Sprites/CardImgs/pizza
+33|Crab|Monster|7|4|8|TRUE|2|Crabs...Plankton...Crabs...Plankton...Spongebob|Sprites/CardImgs/crab
+34|Onion Rings|Monster|8|3|8|TRUE|2|Heart-clogging!|Sprites/CardImgs/onionrings
+35|Fries|Monster|6|2|8|TRUE|2|Lean, salty and crispy|Sprites/CardImgs/fries
+36|Scrumptious Cake|Monster|5|4|7|TRUE|2|Is it my birthday yet?|Sprites/CardImgs/scrumptiouscake
+37|French Toast|Monster|7|3|7|TRUE|2|Yeah, we like breakfast foods, move along|Sprites/CardImgs/frenchtoast
+38|Loaded Baked Potato|Monster|7|2|8|TRUE|2|What toppings do you want in me?|Sprites/CardImgs/loadedbakedpotato
+39|Hot Wings|Monster|8|1|7|TRUE|2|America\'s favorite appetizer|Sprites/CardImgs/hotwings
+40|Popcorn|Monster|5|3|7|TRUE|2|Don\'t forget the butter|Sprites/CardImgs/popcorn
+41|Almonds|Monster|4|2|5|TRUE|2|The perfect snack|Sprites/CardImgs/almonds
+42|Ribs|Monster|7|1|8|TRUE|2|Messy but delicious |Sprites/CardImgs/ribs
+43|Sugar Glider|Monster|8|2|9|TRUE|2|The tiny god of sweetness|Sprites/CardImgs/sugarglider
+44|Chickenhorse|Super Food|13|5|17|FALSE|2|It\'s a chicken and a horse. What\'s not to love?|Sprites/CardImgs/chickenhorse
+45|Bird.obj|Super Food|11|7|17|FALSE|2|It\'s a bird|Sprites/CardImgs/bird.obj
+46|Activated Almonds|Super Food|10|7|15|FALSE|2|You just activated my almonds|Sprites/CardImgs/activatedalmonds|47|Triple Threat Taco|Super Food|9|3|15|FALSE|2|Taco Tuesday!!!|Sprites/CardImgs/triplethreattaco
+48|Corndog of Disappointment|Super Food|1|0|10|FALSE|2|Oh dear|Sprites/CardImgs/corndogofdisappointment
+49|Kidz Bop Cask|Super Food|10|7|15|FALSE|2|How\'d I get stuck in here?|Sprites/CardImgs/kidzbopcask
+50|Holy Moly Stromboli!|Super Food|12|4|11|FALSE|2|A heavenly sandwich with all the meats|Sprites/CardImgs/holymolystromboli
+51|Tenders and Fries |Super Food|13|4|12|FALSE|2|You can\'t go wrong with a classic|Sprites/CardImgs/tendersandfries
+52|Foreclosed Pancake House|Super Food|12|5|15|FALSE|2|We had something special going|Sprites/CardImgs/foreclosedpancakehouse
+53|Cheesecake|Super Food|12|5|14|FALSE|2|Who thought this was a good idea?|Sprites/CardImgs/cheescake
