@@ -21,7 +21,8 @@ class DBi
 //($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 if (DBi::$mydb->errno != 0)
 {
-	echo "you fail: ".DBi::$mydb->error.PHP_EOL;
+	$request['message'] = "you fail: ".DBi::$mydb->error.PHP_EOL;
+	logErrors($request);	
 	exit(0);
 }
 echo "mysqli connected.\n";
