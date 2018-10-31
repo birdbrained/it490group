@@ -75,9 +75,12 @@ function doRegister($database, $e, $u, $p)
 	}
 }
 
-function purchase($database, $ID, $price, $username)
-{
-}
+//function purchase($database, $ID, $price, $u)
+//{	
+	//$u = mysqli_real_escape_string($database,$u);
+	
+	//mysqli_query(
+//}
 
 function requestProcessor($request)
 {
@@ -115,7 +118,7 @@ function requestProcessor($request)
 		return doValidate($request['sessionId']);
 		break;
 	case "transaction":
-		//
+		//($request['ID'], $request['price'], $request['username']);
 		break;
 	case "error":
 		logErrors($request);
