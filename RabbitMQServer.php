@@ -26,6 +26,13 @@ if (DBi::$mydb->errno != 0)
 }
 echo "mysqli connected.\n";
 
+function doLogout($database, $u)
+{
+	$s = "INSERT into UserHistory VALUES ('NOW()', '$u', 'Logout');";
+	$t = mysqli_query($database, $s) or die(mysqli_error($database));
+	return true;
+}
+
 function doLogin($database,$e,$u,$p)
 {
 	$p = mysqli_real_escape_string($database,$p);
@@ -43,6 +50,8 @@ function doLogin($database,$e,$u,$p)
 	{ 
 
 		echo "Found user '$u' with password '$p' and email '$e'" . PHP_EOL;
+		$s = "INSERT into UserHistory VALUES ('NOW()', '$u', 'Login');";
+		mysqli_query($database, $s) or die(mysqli_error($database));
 		return true;
 
 	}
@@ -124,6 +133,8 @@ function requestProcessor($request)
 		logErrors($request);
 		return false;		
 		break;
+	case "logout":
+		doLogout(DBi::$mydb, $request['username'])
 	}
 	
 
