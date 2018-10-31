@@ -21,8 +21,7 @@ class DBi
 //($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 if (DBi::$mydb->errno != 0)
 {
-	$request['message'] = "you fail: ".DBi::$mydb->error.PHP_EOL;
-	logErrors($request);	
+	echo "you fail: ".DBi::$mydb->error.PHP_EOL;
 	exit(0);
 }
 echo "mysqli connected.\n";
@@ -76,6 +75,10 @@ function doRegister($database, $e, $u, $p)
 	}
 }
 
+function purchase($database, $ID, $price, $username)
+{
+}
+
 function requestProcessor($request)
 {
 	echo "received request of type: $request".PHP_EOL;
@@ -110,6 +113,9 @@ function requestProcessor($request)
 		break;
 	case "validate_session":
 		return doValidate($request['sessionId']);
+		break;
+	case "transaction":
+		//
 		break;
 	case "error":
 		logErrors($request);

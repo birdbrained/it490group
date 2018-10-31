@@ -8,11 +8,11 @@ if ($database->errno != 0)
 
 //query the shop table
 $query = "select * from Shop";
-$response = $database->($query);
+$response = $database->query($query);
 $IDCost = array();
 $ValidID = "";
 
-while ($row = mysqli_fetch_array(response, MYSQLI_ASSOC);
+while ($row = mysqli_fetch_array(response, MYSQLI_ASSOC))
 {
 	$IDCost[$row['ID']] = $row['price']; 
 }
@@ -20,7 +20,7 @@ while ($row = mysqli_fetch_array(response, MYSQLI_ASSOC);
 //append the where clause 
 foreach ($IDCost as $key => $value)
 {
-	$ValidID .= " ID = '$key' or"
+	$ValidID .= " ID = '$key' or";
 }
 //take out the last ' or'
 $ValidID = substr($ValidID, 0, -3);
