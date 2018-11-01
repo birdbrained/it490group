@@ -1,4 +1,9 @@
 *.ini
 *.conf
 testRabbitMQClient.php
-
+Builds/
+Library/
+rpc/
+Temp/
+Testbuild/
+UnityPackageManager/
