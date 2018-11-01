@@ -1,3 +1,11 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>IT490 Cooking Card Game</title>
+		<center><h2>The Game.</h2></center>
+		<link rel="stylesheet" href="game.css">
+	</head>
+	<body>
 <?php
 session_start();
 if (isset($_SESSION['type'])) {
@@ -11,3 +19,5 @@ echo "error, plese log in";
 }
 echo "<a href='logout.php'> <button>Logout </button></a>";
 ?>
+	</body>
+</html>

@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 8445832d5691fab4e8ff30d37ab85ad8
+timeCreated: 1540564837
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: HamburgerHeaven
+  fontNames:
+  - HamburgerHeaven
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
