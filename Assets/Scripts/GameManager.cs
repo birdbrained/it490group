@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     private GameObject shopPanel;
     [SerializeField]
     private GameObject shopEntryPrefab;
+    [SerializeField]
+    private Text resultText;
 
 	// Use this for initialization
 	void Start () {
@@ -123,6 +125,75 @@ public class GameManager : MonoBehaviourPunCallbacks
             shopEntry.SetPrice(int.Parse(cardInfo[10]));
             newEntry.transform.SetParent(shopPanel.transform);
         }
+    }
+
+    private void BuildDeckInfo(string[] cardsInfo, string[] currentCardIDsInDeck)
+    {
+        Dictionary<string, int> myDeck = new Dictionary<string, int>();
+        Dictionary<string, int> myNamedDeck = new Dictionary<string, int>();
+        string result = "";
+
+        foreach (string cardID in currentCardIDsInDeck)
+        {
+            
+            if (myDeck.ContainsKey(cardID))
+            {
+                myDeck[cardID]++;
+            }
+            else
+            {
+                myDeck.Add(cardID, 1);
+            }
+            Debug.Log(cardID + ": " + myDeck[cardID].ToString());
+        }
+
+        foreach (string key in myDeck.Keys)
+        {
+            foreach (string str in cardsInfo)
+            {
+                Debug.Log(key + " " + str);
+                string[] cardInfo = str.Split('|');
+                if (cardInfo[0].ToString() == key)
+                {
+                    Debug.Log("it's a match!");
+                    myNamedDeck.Add(cardInfo[1], myDeck[key]);
+                    break;
+                }
+            }
+        }
+
+        foreach (string key in myNamedDeck.Keys)
+        {
+            Debug.Log(key + ": " + myNamedDeck[key].ToString());
+            result += key + "x " + myNamedDeck[key].ToString() + "\n";
+        }
+
+        if (resultText != null)
+        {
+            resultText.text = result;
+        }
+    }
+
+    private IEnumerator _BuildDeckInfo()
+    {
+        string address = "http://" + ipInput.text + "/it490group/GetUserDecks.php?username=" + GetUsername() + "&id=0";
+        WWW request = new WWW(address);
+        Debug.Log(address);
+        yield return request;
+        string[] currentDeckIDs = request.text.Split('|');
+        address = "http://" + ipInput.text + "/it490group/GetCardInfo.php";
+        SetDatabaseIP(ipInput.text);
+        Debug.Log(address);
+        request = new WWW(address);
+        yield return request;
+        string data = request.text;
+        string[] items = data.Split(';');
+        BuildDeckInfo(items, currentDeckIDs);
+    }
+
+    public void BuildDeckInfoStart()
+    {
+        StartCoroutine(_BuildDeckInfo());
     }
 
     public override void OnLeftRoom()
