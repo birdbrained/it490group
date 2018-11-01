@@ -74,6 +74,8 @@ function doRegister($database, $e, $u, $p)
 	if ($database->errno == 0)
 	{
 		echo "Registering user with email ('$e'), username ('$u'), and password ('$p')\n";
+		$s = "INSERT INTO UserInventory (username) values('$u');
+		$t = mysqli_query($database, $s);
 		return true;
 	}
 	else
