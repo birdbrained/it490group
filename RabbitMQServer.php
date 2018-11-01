@@ -6,7 +6,7 @@ require_once('rabbitMQLib.inc');
 
 function logErrors($request){
 	echo $request['message'].PHP_EOL;
-	file_put_contents('errors/ERROR_LOG.help', $request['message'].PHP_EOL, FILE_APPEND | LOCK_EX);
+	//file_put_contents('errors/ERROR_LOG.help', $request['message'].PHP_EOL, FILE_APPEND | LOCK_EX);
 }
 
 class DBi
@@ -14,7 +14,6 @@ class DBi
 	public static $mydb;
 }
 
-//(DBi::$mydb = mysqli_connect('192.168.1.9', 'user', 'password', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 //Ankit DB
 (DBi::$mydb = mysqli_connect('127.0.0.1', 'user', 'password', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 
@@ -28,7 +27,7 @@ echo "mysqli connected.\n";
 
 function doLogout($database, $u)
 {
-	$s = "INSERT into UserHistory VALUES ('NOW()', '$u', 'Logout');";
+	$s = "INSERT into UserHistory VALUES (NOW(), '$u', 'logout');";
 	$t = mysqli_query($database, $s) or die(mysqli_error($database));
 	return true;
 }
@@ -50,7 +49,7 @@ function doLogin($database,$e,$u,$p)
 	{ 
 
 		echo "Found user '$u' with password '$p' and email '$e'" . PHP_EOL;
-		$s = "INSERT into UserHistory VALUES ('NOW()', '$u', 'Login');";
+		$s = "INSERT into UserHistory VALUES (NOW(), '$u', 'login');";
 		mysqli_query($database, $s) or die(mysqli_error($database));
 		return true;
 
@@ -74,6 +73,14 @@ function doRegister($database, $e, $u, $p)
 	if ($database->errno == 0)
 	{
 		echo "Registering user with email ('$e'), username ('$u'), and password ('$p')\n";
+		//Create user inventory and default deck		
+		$s = "INSERT INTO UserInventory (username) values('$u');";
+		$t = mysqli_query($database, $s);
+		$s = "INSERT INTO UserDeck (username, deckID, lru) values('$u', 0 , lru 0);";
+		$t = mysqli_query($database, $s);
+		//Log history
+		$s = "INSERT into UserHistory VALUES (NOW(), '$u', 'register');";
+		mysqli_query($database, $s) or die(mysqli_error($database));
 		return true;
 	}
 	else
@@ -84,16 +91,58 @@ function doRegister($database, $e, $u, $p)
 	}
 }
 
-//function purchase($database, $ID, $price, $u)
-//{	
-	//$u = mysqli_real_escape_string($database,$u);
+function purchase($database, $ID, $price, $u)
+{	
+	if ($ID == NULL)
+		return;
+	if ($price == NULL)
+		return;
+	if ($u == NULL)
+		return;
+	$u = mysqli_real_escape_string($database,$u);
 	
-	//mysqli_query(
-//}
+	$stmt = "Select * from Users where username = '$u';";
+	$t = mysqli_query($database, $stmt);
+	$money = 0;
+	
+	while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
+	{
+		$money = $row['totalMoney']; 
+	}
+	
+	if ($money >= intval($price))
+	{
+		//purchase successful
+		$s = "update UserInventory set numCard" . $ID . "= numCard" . $ID . " + 1 where username = '$u';";
+		$t = mysqli_query($database, $s);
+		$s = "update Users set totalMoney = totalMoney - '$price' where username = '$u';";
+		$t = mysqli_query($database, $s);
+		echo "gave user '$u' card number '$ID'".PHP_EOL;
+		//Add new card to deck
+		$s = "Select * from UserDeck where username = '$u' and deckID = '0';";
+		$t = mysqli_query($database, $s);
+		$lru = 0;
+		while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
+		{
+			$lru = $row['lru']; 
+		}
+		if($lru >= 29)
+		{
+			$s = "UPDATE UserDeck SET card" . $lru . " = " . $ID . ", lru = 0 where username = '$u' and deckID = '0';";
+		}
+		else 
+		{
+			$s = "UPDATE UserDeck SET card" . $lru . " = " . $ID . ", lru = lru + 1 where username = '$u' and deckID = 0;";	
+		}		
+		mysqli_query($database, $s);
+	}
+	else
+		echo "get more money!";
+}
 
 function requestProcessor($request)
 {
-	echo "received request of type: $request".PHP_EOL;
+	echo "received request of type: ".$request['type'].PHP_EOL;
 	var_dump($request);
 	$success = false;
 	if(!isset($request['type']))
@@ -127,14 +176,15 @@ function requestProcessor($request)
 		return doValidate($request['sessionId']);
 		break;
 	case "transaction":
-		//($request['ID'], $request['price'], $request['username']);
+		return purchase(DBi::$mydb, $request['ID'], $request['price'], $request['username']);
 		break;
 	case "error":
 		logErrors($request);
 		return false;		
 		break;
 	case "logout":
-		doLogout(DBi::$mydb, $request['username'])
+		doLogout(DBi::$mydb, $request['username']);
+		break;
 	}
 	
 

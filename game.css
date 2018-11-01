@@ -1,0 +1,42 @@
+html
+{
+	background-image: linear-gradient(to bottom right, lightblue, white);
+	height: 1000px;
+}
+
+body 
+{
+	font-family: Verdana, Geneva, sans-serif;
+	text-align: center;
+}
+
+h2
+{
+	font-family: "Lucida Console", Monaco, Verdana, Geneva, sans-serif;
+}
+
+h4 
+{
+	font-family: "Lucida Console", Monaco, monospace;
+}
+
+iframe
+{
+	position: center;
+	height: 700px;
+	width: 1010px;
+	background-color: #f9fefe;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+button
+{
+	background-color: #00238b;
+	border: none;
+	color: white;
+	font-size: 36px;
+	padding: 8px 16px;
+	cursor: pointer;
+}

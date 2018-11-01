@@ -31,6 +31,7 @@ $request['message'] = $msg;
 */
 
 $request['type'] = $_POST['sessionType'];
+echo "equest type: " . $request['type'].PHP_EOL;
 $request['username'] = $_POST['username'];
 $request['password'] = $_POST['password'];
 $request['email'] = $_POST['email'];
