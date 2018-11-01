@@ -1,0 +1,26 @@
+html
+{
+	background-image: linear-gradient(to bottom right, lightblue, white);
+	height: 1000px;
+}
+
+body 
+{
+	font-family: Verdana, sans-serif;
+}
+
+h2
+{
+	font-family: Verdana, sans-serif;
+}
+
+iframe
+{
+	position: center;
+	height: 700px;
+	width: 1010px;
+	background-color: black;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
