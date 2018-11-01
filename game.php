@@ -2,7 +2,8 @@
 <html>
 	<head>
 		<title>IT490 Cooking Card Game</title>
-		<center><h2>The Game.</h2></center>
+		<center><h2>FLOUR POWER</h2></center>
+		<center><h3>Fistful of Dough</h3><center>
 		<link rel="stylesheet" href="game.css">
 	</head>
 	<body>
