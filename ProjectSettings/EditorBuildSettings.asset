@@ -17,3 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/Shop.unity
     guid: 8215948f10cdb9048be10ae2f1b00d96
+  - enabled: 1
+    path: Assets/_Scenes/DeckSelect.unity
+    guid: 0ae6aa801057b254dbbd215b41b96d47
