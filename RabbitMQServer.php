@@ -14,7 +14,6 @@ class DBi
 	public static $mydb;
 }
 
-//(DBi::$mydb = mysqli_connect('192.168.1.9', 'user', 'password', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 //Ankit DB
 (DBi::$mydb = mysqli_connect('127.0.0.1', 'user', 'password', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 
@@ -74,8 +73,12 @@ function doRegister($database, $e, $u, $p)
 	if ($database->errno == 0)
 	{
 		echo "Registering user with email ('$e'), username ('$u'), and password ('$p')\n";
+		//Create user inventory and default deck		
 		$s = "INSERT INTO UserInventory (username) values('$u');";
 		$t = mysqli_query($database, $s);
+		$s = "INSERT INTO UserDeck (username, deckID, lru) values('$u', 0 , lru 0);";
+		$t = mysqli_query($database, $s);
+		//Log history
 		$s = "INSERT into UserHistory VALUES (NOW(), '$u', 'register');";
 		mysqli_query($database, $s) or die(mysqli_error($database));
 		return true;
@@ -109,11 +112,29 @@ function purchase($database, $ID, $price, $u)
 	
 	if ($money >= intval($price))
 	{
+		//purchase successful
 		$s = "update UserInventory set numCard" . $ID . "= numCard" . $ID . " + 1 where username = '$u';";
 		$t = mysqli_query($database, $s);
 		$s = "update Users set totalMoney = totalMoney - '$price' where username = '$u';";
 		$t = mysqli_query($database, $s);
 		echo "gave user '$u' card number '$ID'".PHP_EOL;
+		//Add new card to deck
+		$s = "Select * from UserDeck where username == '$u' and deckID == 0"
+		$t = mysqli_query($database, $s);
+		$lru = 0;
+		while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
+		{
+			$lru = $row['lru']; 
+		}
+		if($lru >= 29)
+		{
+			$s = "UPDATE UserDeck SET card" . $lru . " = " . $ID . ", lru = 0 where username = '$u' and deckID == 0;";
+		}
+		else 
+		{
+			$s = "UPDATE UserDeck SET card" . $lru . " = " . $ID . ", lru = lru + 1 where username = '$u' and deckID == 0;";	
+		}		
+		mysqli_query($database, $s);
 	}
 	else
 		echo "get more money!";
