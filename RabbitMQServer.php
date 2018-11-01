@@ -119,7 +119,8 @@ function purchase($database, $ID, $price, $u)
 		$t = mysqli_query($database, $s);
 		echo "gave user '$u' card number '$ID'".PHP_EOL;
 		//Add new card to deck
-		$s = "Select * from UserDeck where username == '$u' and deckID == 0";
+
+		$s = "Select * from UserDeck where username = '$u' and deckID = '0';";
 		$t = mysqli_query($database, $s);
 		$lru = 0;
 		while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
@@ -128,11 +129,11 @@ function purchase($database, $ID, $price, $u)
 		}
 		if($lru >= 29)
 		{
-			$s = "UPDATE UserDeck SET card" . $lru . " = " . $ID . ", lru = 0 where username = '$u' and deckID == 0;";
+			$s = "UPDATE UserDeck SET card" . $lru . " = " . $ID . ", lru = 0 where username = '$u' and deckID = '0';";
 		}
 		else 
 		{
-			$s = "UPDATE UserDeck SET card" . $lru . " = " . $ID . ", lru = lru + 1 where username = '$u' and deckID == 0;";	
+			$s = "UPDATE UserDeck SET card" . $lru . " = " . $ID . ", lru = lru + 1 where username = '$u' and deckID = 0;";	
 		}		
 		mysqli_query($database, $s);
 	}
