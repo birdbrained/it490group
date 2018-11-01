@@ -3,6 +3,12 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
+function processresponse($response)
+{
+	echo "processing request or whatever \n";
+	var_dump($request);
+	echo $response['message'] . PHP_EOL; 
+}
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 
 $request = array();

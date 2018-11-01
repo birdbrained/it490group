@@ -38,4 +38,19 @@ public class GrabDataFromTable : MonoBehaviour
         items = data.Split(';');
         GameManager.Instance.BuildCardInfo(items);
     }
+
+    public void GetDataFromUserDeckTable()
+    {
+        StartCoroutine(_UserDeck());
+    }
+
+    private IEnumerator _UserDeck()
+    {
+        string address = "http://" + ipInput.text + "/it490group/GetUserDecks.php?username=" + GameManager.Instance.GetUsername() + "&id=0";
+        GameManager.Instance.SetDatabaseIP(ipInput.text);
+        Debug.Log(address);
+        WWW request = new WWW(address);
+        yield return request;
+        Debug.Log(request.text);
+    }
 }
