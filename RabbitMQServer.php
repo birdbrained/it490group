@@ -5,8 +5,9 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
 function logErrors($request){
+	echo $request['type']." : ";	
 	echo $request['message'].PHP_EOL;
-	//file_put_contents('errors/ERROR_LOG.help', $request['message'].PHP_EOL, FILE_APPEND | LOCK_EX);
+	file_put_contents('errors/ERROR_LOG.help', $request['message'].PHP_EOL, FILE_APPEND | LOCK_EX);
 }
 
 class DBi
@@ -118,6 +119,8 @@ function purchase($database, $ID, $price, $u)
 		$s = "update Users set totalMoney = totalMoney - '$price' where username = '$u';";
 		$t = mysqli_query($database, $s);
 		echo "gave user '$u' card number '$ID'".PHP_EOL;
+		$s= "INSERT INTO UserTransactions VALUES (NOW(), '$u', '$ID', '$price');";
+		$t = mysqli_query($database, $s);
 		//Add new card to deck
 
 		$s = "Select * from UserDeck where username = '$u' and deckID = '0';";
@@ -156,13 +159,14 @@ function requestProcessor($request)
 	{
 	case "login":
 		$success = doLogin(DBi::$mydb, $request['email'], $request['username'],$request['password']);
-
+		logErrors($request);
 		if ($success == false)
 		{
 			$request['message'] = "Invalid login credentials";
 			logErrors($request);			
 			return array("returnCode" => '1', "message" => "Invalid login credentials");
 		}
+		logErrors($request);		
 		break;
 	case "register":
 		$success = doRegister(DBi::$mydb, $request['email'], $request['username'], $request['password']);
@@ -172,12 +176,15 @@ function requestProcessor($request)
 			logErrors($request);						
 			return array("returnCode" => '2', "message" => "Registration error");
 		}
+		logErrors($request);		
 		break;
 	case "validate_session":
 		return doValidate($request['sessionId']);
-		break;
+		logErrors($request);
+		break;		
 	case "transaction":
 		return purchase(DBi::$mydb, $request['ID'], $request['price'], $request['username']);
+		logErrors($request);
 		break;
 	case "error":
 		logErrors($request);

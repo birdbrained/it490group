@@ -43,11 +43,12 @@ $_SESSION['email'] = $_POST['email'];
 //echo "a\n";
 $response = "no";
 //$client->process_response($response);
+echo "About to send a request to the server<br>" . PHP_EOL;
 $response = $client->send_request($request);
 //echo "b\n";
 //$response = $client->publish($request);
 $_SESSION['returnCode'] = $response['returnCode'];
-echo "client received response: returnCode: " . $response['returnCode'] . " message: " . $response['message'] .PHP_EOL;
+echo "client received response: returnCode: " . $response['returnCode'] . " message: " . $response['message'] . "<br>" . PHP_EOL;
 echo "\n\n";
 if ($response['returnCode'] == 0){
 	//print_r($response);
