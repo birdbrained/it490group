@@ -35,6 +35,7 @@ echo "equest type: " . $request['type'].PHP_EOL;
 $request['username'] = $_POST['username'];
 $request['password'] = $_POST['password'];
 $request['email'] = $_POST['email'];
+$request['message'] = "Type: " . $request['type'] . " Username: " . $request['username'] . " Password: " . $request['password'] . " E-mail: " . $request['email'] . PHP_EOL;
 
 $_SESSION['type'] = $_POST['sessionType'];
 $_SESSION['username'] = $_POST['username'];
