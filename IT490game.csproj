@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>WebGL:20</UnityBuildTarget>
     <UnityVersion>2017.3.0f3</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -299,67 +297,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Photon\PhotonChat\Code\ChatChannel.cs" />
-    <Compile Include="Assets\Photon\PhotonChat\Code\ChatClient.cs" />
-    <Compile Include="Assets\Photon\PhotonChat\Code\ChatDisconnectCause.cs" />
-    <Compile Include="Assets\Photon\PhotonChat\Code\ChatEventCode.cs" />
-    <Compile Include="Assets\Photon\PhotonChat\Code\ChatOperationCode.cs" />
-    <Compile Include="Assets\Photon\PhotonChat\Code\ChatParameterCode.cs" />
-    <Compile Include="Assets\Photon\PhotonChat\Code\ChatPeer.cs" />
-    <Compile Include="Assets\Photon\PhotonChat\Code\ChatState.cs" />
-    <Compile Include="Assets\Photon\PhotonChat\Code\ChatUserStatus.cs" />
-    <Compile Include="Assets\Photon\PhotonChat\Code\IChatClientListener.cs" />
     <Compile Include="Assets\Photon\PhotonLibs\WebSocket\SocketWebTcp.cs" />
     <Compile Include="Assets\Photon\PhotonLibs\WebSocket\WebSocket.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\AppSettings.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\ConnectionHandler.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\Extensions.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\FriendInfo.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\LoadBalancingClient.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\LoadbalancingPeer.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\PhotonPing.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\PhotonPingClasses.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\Player.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\Region.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\RegionHandler.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\Room.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\RoomInfo.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\SupportLogger.cs" />
-    <Compile Include="Assets\Photon\PhotonRealtime\Code\WebRpc.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\CustomTypes.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\AccountService.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\PhotonEditor.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\PhotonEditorUtils.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\PhotonGUI.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\PhotonViewHandler.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\PhotonViewInspector.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\PunSceneSettings.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\ReorderableListResources.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\ServerSettingsInspector.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\Views\PhotonAnimatorViewEditor.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\Views\PhotonRigidbody2DViewEditor.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\Views\PhotonRigidbodyViewEditor.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\Views\PhotonTransformViewEditor.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Enums.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\PhotonHandler.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\PhotonNetwork.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\PhotonNetworkPart.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\PhotonStreamQueue.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\PhotonView.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\PunClasses.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\ServerSettings.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Views\PhotonAnimatorView.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Views\PhotonRigidbody2DView.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Views\PhotonRigidbodyView.cs" />
-    <Compile Include="Assets\Photon\PhotonUnityNetworking\Code\Views\PhotonTransformView.cs" />
-    <Compile Include="Assets\Scripts\ButtonLogic.cs" />
-    <Compile Include="Assets\Scripts\Card.cs" />
-    <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\GrabDataFromTable.cs" />
-    <Compile Include="Assets\Scripts\GrabDataTest.cs" />
-    <Compile Include="Assets\Scripts\Launcher.cs" />
-    <Compile Include="Assets\Scripts\PlayerController.cs" />
-    <Compile Include="Assets\Scripts\ShopEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Photon\PhotonChat\Code\PhotonChat.asmdef" />
