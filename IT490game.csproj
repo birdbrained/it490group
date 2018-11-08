@@ -379,9 +379,6 @@
     <None Include="Assets\Photon\PhotonUnityNetworking\link.xml" />
     <None Include="Assets\Photon\PhotonUnityNetworking\readme.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\Photon\PhotonUnityNetworking\Code\Editor\PunGradient.jpg" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
 </Project>
