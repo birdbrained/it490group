@@ -2132,6 +2132,7 @@ MonoBehaviour:
   player2: {fileID: 0}
   dbIP: 0.0.0.0
   ipInput: {fileID: 0}
+  brokerIPInput: {fileID: 1308819943}
   userName: b
   shopPanel: {fileID: 1734870462}
   shopEntryPrefab: {fileID: 1062907732147604, guid: 1964026313bfede42a338cdb3d09ee85,
