@@ -182,8 +182,8 @@ function requestProcessor($request)
 		logErrors($request);
 		break;		
 	case "transaction":
-		return purchase(DBi::$mydb, $request['ID'], $request['price'], $request['username']);
 		logErrors($request);
+		return purchase(DBi::$mydb, $request['ID'], $request['price'], $request['username']);
 		break;
 	case "error":
 		logErrors($request);
