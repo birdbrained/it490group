@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     private string dbIP = "0.0.0.0";
     [SerializeField]
     private InputField ipInput;
+    [SerializeField]
+    private InputField brokerIPInput;
 
     [SerializeField]
     private string userName = "b";
@@ -81,6 +83,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     public string GetDatabaseIP()
     {
         return dbIP;
+    }
+
+    public string GetBrokerIP()
+    {
+        return brokerIPInput.text;
     }
 
     public string GetUsername()
