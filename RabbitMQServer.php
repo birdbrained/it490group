@@ -208,9 +208,14 @@ function requestProcessor($request)
 		logErrors($request);
 		return false;		
 		break;
-	case 	
 	case "logout":
 		doLogout(DBi::$mydb, $request['username']);
+		break;
+	case "update":
+		$bundleType = $request['bundleType'];
+		$path = retreiveFilepath(DBi::$mydb, $bundleType);
+		$binary = returnTarBinary($request, $path);
+		return array("returnCode" => '0', 'message'=>"Server received request and processed", 'contents'=>$binary, 'filename'=>$path);
 		break;
 	}
 	
