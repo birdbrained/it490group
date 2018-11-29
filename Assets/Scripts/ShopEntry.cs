@@ -71,7 +71,7 @@ public class ShopEntry : MonoBehaviour
     private IEnumerator _MakeTransaction()
     {
         Debug.LogFormat("id {0} username {1} price {2}", myCard.GetCardID().ToString(), GameManager.Instance.GetUsername(), price.ToString());
-        string address = "http://" + "10.0.0.5" + "/it490group/MakeTransaction.php?id=" + myCard.GetCardID().ToString()
+        string address = "http://" + GameManager.Instance.GetBrokerIP() + "/it490group/MakeTransaction.php?id=" + myCard.GetCardID().ToString()
             + "&username=" + GameManager.Instance.GetUsername() + "&price=" + price.ToString();
         WWW request = new WWW(address);
         yield return request;
