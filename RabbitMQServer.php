@@ -3,7 +3,7 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-require_once('DeployFunctions.php')
+require_once('DeployFunctions.php');
 
 function logErrors($request){
 	echo $request['type']." : ";	
@@ -153,7 +153,7 @@ function retreiveFilepath($database, $type)
 
 	$table = mysqli_query($database, $query);
 
-	while ($row = mysqli_fetch_array{$table, MYSQLI_ASSOC))
+	while ($row = mysqli_fetch_array($table, MYSQLI_ASSOC))
 	{
 		// make this version the one to send to client
 		$filepath = $row['path'];
