@@ -5,7 +5,16 @@ function deploy()
 
 }
 
-function extractClient($request, $filename)
+function extractClient($content, $filename)
+{
+//read string, write file
+file_put_contents($filename, $content);
+//extract tarball
+echo shell_exec("sh extractTar.sh it490group/$filename");
+//replace files in directory
+}
+
+function extractServer($request, $filename)
 {
 //read string, write file
 $filename = "backup_" . $request['bundletype'] . "_v" . $request['versionNumber'] . ".tgz";
