@@ -26,9 +26,11 @@ echo shell_exec("sh extractTar.sh it490group/$filename");
 
 function returnTarBinary($request, $filename)
 {
+echo "called returnTarBinary";
 $file = fopen($filename, "rb");
 $contents = fread($file, filesize($filename));
 fclose($file);
+echo "Contents: $contents" . PHP_EOL;
 return $contents;
 }
 

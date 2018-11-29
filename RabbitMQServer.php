@@ -3,7 +3,7 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-require_once('DeployFunctions.php')
+require_once('DeployFunctions.php');
 
 function logErrors($request){
 	echo $request['type']." : ";	
@@ -150,15 +150,18 @@ function retreiveFilepath($database, $type)
 
 	$query = "SELECT * FROM VersionControl WHERE type = '$type' AND status = 'good' ORDER BY version DESC";
 
+	echo "about to back a query to the database\n";
+
 	$table = mysqli_query($database, $query);
 
-	while ($row = mysqli_fetch_array{$table, MYSQLI_ASSOC))
+	while ($row = mysqli_fetch_array($table, MYSQLI_ASSOC))
 	{
 		// make this version the one to send to client
 		$filepath = $row['path'];
 		break;
 	}
 
+	echo "Filepath is $filepath" . PHP_EOL;
 	return $filepath;
 }
 
@@ -212,7 +215,9 @@ function requestProcessor($request)
 		doLogout(DBi::$mydb, $request['username']);
 		break;
 	case "update":
+		echo "running update case".PHP_EOL;
 		$bundleType = $request['bundleType'];
+		echo "BundleType is: " . $bundleType . PHP_EOL;
 		$path = retreiveFilepath(DBi::$mydb, $bundleType);
 		$binary = returnTarBinary($request, $path);
 		return array("returnCode" => '0', 'message'=>"Server received request and processed", 'contents'=>$binary, 'filename'=>$path);
