@@ -3,6 +3,7 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
+require_once('DeployFunctions.php')
 
 function logErrors($request){
 	echo $request['type']." : ";	
@@ -189,6 +190,7 @@ function requestProcessor($request)
 		logErrors($request);
 		return false;		
 		break;
+	case 	
 	case "logout":
 		doLogout(DBi::$mydb, $request['username']);
 		break;
