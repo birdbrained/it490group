@@ -147,7 +147,6 @@ function purchase($database, $ID, $price, $u)
 function retreiveFilepath($database, $type)
 {
 	$filepath = "";
-	$verToSend = null;
 
 	$query = "SELECT * FROM VersionControl WHERE type = '$type' AND status = 'good' ORDER BY version DESC";
 
