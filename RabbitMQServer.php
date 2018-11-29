@@ -144,10 +144,8 @@ function purchase($database, $ID, $price, $u)
 		echo "get more money!";
 }
 
-function retreiveFilepath($database, $ver, $type, $u)
+function retreiveFilepath($database, $type)
 {
-	$u = mysqli_real_escape_string($database,$u);
-
 	$filepath = "";
 	$verToSend = null;
 
