@@ -143,6 +143,27 @@ function purchase($database, $ID, $price, $u)
 		echo "get more money!";
 }
 
+function retreiveFilepath($database, $ver, $type, $u)
+{
+	$u = mysqli_real_escape_string($database,$u);
+
+	$filepath = "";
+	$verToSend = null;
+
+	$query = "SELECT * FROM VersionControl WHERE type = '$type' AND status = 'good' ORDER BY version DESC";
+
+	$table = mysqli_query($database, $query);
+
+	while ($row = mysqli_fetch_array{$table, MYSQLI_ASSOC))
+	{
+		// make this version the one to send to client
+		$filepath = $row['path'];
+		break;
+	}
+
+	return $filepath;
+}
+
 function requestProcessor($request)
 {
 	echo "received request of type: ".$request['type'].PHP_EOL;
