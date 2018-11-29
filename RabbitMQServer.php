@@ -151,6 +151,8 @@ function retreiveFilepath($database, $type)
 
 	$query = "SELECT * FROM VersionControl WHERE type = '$type' AND status = 'good' ORDER BY version DESC";
 
+	echo "about to back a query to the database\n";
+
 	$table = mysqli_query($database, $query);
 
 	while ($row = mysqli_fetch_array($table, MYSQLI_ASSOC))
@@ -160,6 +162,7 @@ function retreiveFilepath($database, $type)
 		break;
 	}
 
+	echo "Filepath is $filepath" . PHP_EOL;
 	return $filepath;
 }
 
@@ -214,7 +217,9 @@ function requestProcessor($request)
 		logErrors($request);
 		break;
 	case "update":
+		echo "running update case".PHP_EOL;
 		$bundleType = $request['bundleType'];
+		echo "BundleType is: " . $bundleType . PHP_EOL;
 		$path = retreiveFilepath(DBi::$mydb, $bundleType);
 		$binary = returnTarBinary($request, $path);
 		return array("returnCode" => '0', 'message'=>"Server received request and processed", 'contents'=>$binary, 'filename'=>$path);
