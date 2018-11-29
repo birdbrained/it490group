@@ -179,12 +179,12 @@ function requestProcessor($request)
 		logErrors($request);		
 		break;
 	case "validate_session":
-		return doValidate($request['sessionId']);
 		logErrors($request);
+		return doValidate($request['sessionId']);
 		break;		
 	case "transaction":
-		return purchase(DBi::$mydb, $request['ID'], $request['price'], $request['username']);
 		logErrors($request);
+		return purchase(DBi::$mydb, $request['ID'], $request['price'], $request['username']);
 		break;
 	case "error":
 		logErrors($request);
@@ -192,6 +192,7 @@ function requestProcessor($request)
 		break;
 	case "logout":
 		doLogout(DBi::$mydb, $request['username']);
+		logErrors($request);
 		break;
 	}
 	
