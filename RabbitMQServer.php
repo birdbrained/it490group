@@ -216,8 +216,15 @@ function requestProcessor($request)
 	case "update":
 		$bundleType = $request['bundleType'];
 		$path = retreiveFilepath(DBi::$mydb, $bundleType);
-		$binary = returnTarBinary($request, $path);
-		return array("returnCode" => '0', 'message'=>"Server received request and processed", 'contents'=>$binary, 'filename'=>$path);
+		$path = "/var/www/html/it490group/" . $path;
+		scpCopy($path, $request['user'], $request['ip']);
+		//$binary = returnTarBinary($request, $path);
+		$returnArray = array();
+		$returnArray['returnCode'] = '0';
+		$returnArray['message'] = "Server received request and processed";
+		$returnArray['filepath'] = $path;
+		return $returnArray;
+		echo "";
 		break;
 	}
 	
