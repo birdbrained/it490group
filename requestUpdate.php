@@ -8,16 +8,20 @@ $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 
 $request = array();
 $request['type'] = 'update';
-$request['bundletype'] = $argv[1];
+$request['bundleType'] = $argv[1];
 
+echo "Calling rabbitmq...\n";
 $response = $client->send_request($request);
+var_dump($response);
+echo "Got a response\n";
 
 if ($response['returnCode'] == 0)
 {
 	echo "Successfully requested update.\n";
-	$contents = $request['contents'];
-	$filename = $request['filename'];
-	extractClient($contents, $filename);
+	$contents = $response['contents'];
+	$filename = $response['filename'];
+	echo "contents: ($contents)\nfilename: ($filename)\n";
+	//extractClient($contents, $filename);
 }
 else
 {

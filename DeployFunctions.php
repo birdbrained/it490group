@@ -8,9 +8,11 @@ function deploy()
 function extractClient($content, $filename)
 {
 //read string, write file
+echo "running extractClient\n";
+$filename = "it490group/" . $filename;
 file_put_contents($filename, $content);
 //extract tarball
-echo shell_exec("sh extractTar.sh it490group/$filename");
+echo shell_exec("sh extractTar.sh $filename");
 //replace files in directory
 }
 
