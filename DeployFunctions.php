@@ -7,7 +7,7 @@ function deploy()
 
 function scpCopy($filename, $u, $ip)
 {
-echo shell_exec("sh SCPScript.sh $filename $u $ip");
+echo shell_exec("sh SCPscript.sh $filename $u $ip");
 }
 
 

@@ -9,6 +9,8 @@ $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 $request = array();
 $request['type'] = 'update';
 $request['bundleType'] = $argv[1];
+$request['user'] = $argv[2];
+$request['ip'] = $argv[3];
 
 echo "Calling rabbitmq...\n";
 $response = $client->send_request($request);
@@ -18,9 +20,9 @@ echo "Got a response\n";
 if ($response['returnCode'] == 0)
 {
 	echo "Successfully requested update.\n";
-	$contents = $response['contents'];
-	$filename = $response['filename'];
-	echo "contents: ($contents)\nfilename: ($filename)\n";
+	//$contents = $response['contents'];
+	//$filename = $response['filename'];
+	//echo "contents: ($contents)\nfilename: ($filename)\n";
 	//extractClient($contents, $filename);
 }
 else
