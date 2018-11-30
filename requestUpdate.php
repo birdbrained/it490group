@@ -21,9 +21,9 @@ if ($response['returnCode'] == 0)
 {
 	echo "Successfully requested update.\n";
 	//$contents = $response['contents'];
-	//$filename = $response['filename'];
+	$filename = $response['filepath'];
 	//echo "contents: ($contents)\nfilename: ($filename)\n";
-	//extractClient($contents, $filename);
+	extractClient($contents, $filename);
 }
 else
 {
