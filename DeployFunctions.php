@@ -15,9 +15,11 @@ echo shell_exec("sh SCPScript.sh $filename $u $ip");
 function extractClient($content, $filename)
 {
 //read string, write file
+echo "running extractClient\n";
+$filename = "it490group/" . $filename;
 file_put_contents($filename, $content);
 //extract tarball
-echo shell_exec("sh extractTar.sh it490group/$filename");
+echo shell_exec("sh extractTar.sh $filename");
 //replace files in directory
 }
 
@@ -33,9 +35,11 @@ echo shell_exec("sh extractTar.sh it490group/$filename");
 
 function returnTarBinary($request, $filename)
 {
+echo "called returnTarBinary";
 $file = fopen($filename, "rb");
 $contents = fread($file, filesize($filename));
 fclose($file);
+echo "Contents: $contents" . PHP_EOL;
 return $contents;
 }
 
