@@ -222,9 +222,13 @@ function requestProcessor($request)
 		echo "BundleType is: " . $bundleType . PHP_EOL;
 		$path = retreiveFilepath(DBi::$mydb, $bundleType);
 		$binary = returnTarBinary($request, $path);
-		echo "path ($path)\nbinary ($binary)\n";
-		return array("returnCode" => '0', 'message'=>"Server received request and processed", 'contents'=>$binary, 'filename'=>$path);
-		echo "testinghdjkbdvdbvbv\n";
+		$returnArray = array();
+		$returnArray['returnCode'] = '0';
+		$returnArray['message'] = "Server received request and processed";
+		$returnArray['contents'] = $binary;
+		//$returnArray['filename'] = $path;
+		var_dump ($returnArray);
+		return $returnArray;
 		break;
 	}
 	
