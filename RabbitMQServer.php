@@ -219,12 +219,13 @@ function requestProcessor($request)
 		$bundleType = $request['bundleType'];
 		echo "BundleType is: " . $bundleType . PHP_EOL;
 		$path = retreiveFilepath(DBi::$mydb, $bundleType);
-		$binary = returnTarBinary($request, $path);
+		$path = "/var/www/hmtl/it490group/" . $path;
+		scpCopy($path, $request['user'], $request['ip']);
+		//$binary = returnTarBinary($request, $path);
 		$returnArray = array();
 		$returnArray['returnCode'] = '0';
 		$returnArray['message'] = "Server received request and processed";
-		$returnArray['contents'] = $binary;
-		$returnArray['filename'] = $path;
+		$returnArray['filepath'] = $path;
 		return $returnArray;
 		break;
 	}
