@@ -5,6 +5,13 @@ function deploy()
 
 }
 
+function scpCopy($filename, $u, $ip)
+{
+echo shell_exec("sh SCPScript.sh $filename $u $ip");
+}
+
+
+
 function extractClient($content, $filename)
 {
 //read string, write file
