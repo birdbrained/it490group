@@ -227,6 +227,7 @@ function requestProcessor($request)
 		$returnArray['message'] = "Server received request and processed";
 		$returnArray['filepath'] = $path;
 		return $returnArray;
+		echo "";
 		break;
 	}
 	
