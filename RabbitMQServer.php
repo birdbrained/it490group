@@ -3,7 +3,7 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-require_once('DeployFunctions.php');
+require_once('DeployFunctions.php')
 
 function logErrors($request){
 	echo $request['type']." : ";	
@@ -123,6 +123,7 @@ function purchase($database, $ID, $price, $u)
 		$s= "INSERT INTO UserTransactions VALUES (NOW(), '$u', '$ID', '$price');";
 		$t = mysqli_query($database, $s);
 		//Add new card to deck
+
 		$s = "Select * from UserDeck where username = '$u' and deckID = '0';";
 		$t = mysqli_query($database, $s);
 		$lru = 0;
@@ -150,18 +151,15 @@ function retreiveFilepath($database, $type)
 
 	$query = "SELECT * FROM VersionControl WHERE type = '$type' AND status = 'good' ORDER BY version DESC";
 
-	echo "about to back a query to the database\n";
-
 	$table = mysqli_query($database, $query);
 
-	while ($row = mysqli_fetch_array($table, MYSQLI_ASSOC))
+	while ($row = mysqli_fetch_array{$table, MYSQLI_ASSOC))
 	{
 		// make this version the one to send to client
 		$filepath = $row['path'];
 		break;
 	}
 
-	echo "Filepath is $filepath" . PHP_EOL;
 	return $filepath;
 }
 
@@ -200,8 +198,8 @@ function requestProcessor($request)
 		logErrors($request);		
 		break;
 	case "validate_session":
-		return doValidate($request['sessionId']);
 		logErrors($request);
+		return doValidate($request['sessionId']);
 		break;		
 	case "transaction":
 		logErrors($request);
@@ -213,21 +211,13 @@ function requestProcessor($request)
 		break;
 	case "logout":
 		doLogout(DBi::$mydb, $request['username']);
+		logErrors($request);
 		break;
 	case "update":
-		echo "running update case".PHP_EOL;
 		$bundleType = $request['bundleType'];
-		echo "BundleType is: " . $bundleType . PHP_EOL;
 		$path = retreiveFilepath(DBi::$mydb, $bundleType);
-		$path = "/var/www/hmtl/it490group/" . $path;
-		scpCopy($path, $request['user'], $request['ip']);
-		//$binary = returnTarBinary($request, $path);
-		$returnArray = array();
-		$returnArray['returnCode'] = '0';
-		$returnArray['message'] = "Server received request and processed";
-		$returnArray['filepath'] = $path;
-		return $returnArray;
-		echo "";
+		$binary = returnTarBinary($request, $path);
+		return array("returnCode" => '0', 'message'=>"Server received request and processed", 'contents'=>$binary, 'filename'=>$path);
 		break;
 	}
 	
