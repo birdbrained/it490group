@@ -19,8 +19,9 @@ $request['versionnumber'] = $vn;
 
 $filepath = 'backups/backup_' . $bundleType . '_v' . $vn . '.tgz';
 $request['filepath'] = $filepath;
+echo "filepath: $filepath".PHP_EOL;
 
-echo shell_exec('sh backup.sh ' . $bundleType . ' ' . $filepath) . PHP_EOL;
+echo shell_exec('sh backup.sh ' . $bundleType . ' ' . $vn) . PHP_EOL;
 
 $path = "/var/www/html/it490group/" . $filepath;
 $ip = readline("Enter IP of deployment server: ");
