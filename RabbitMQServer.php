@@ -163,6 +163,12 @@ function retreiveFilepath($database, $type)
 	return $filepath;
 }
 
+function newBackup($db, $vn, $type, $filepath, $status)
+{
+	$stmt = "insert into VersionControl values('$vn', '$type', '$filepath', '$status');";
+	$t = mysqli_query($db, $stmt);
+}
+
 function requestProcessor($request)
 {
 	echo "received request of type: ".$request['type'].PHP_EOL;
@@ -225,6 +231,13 @@ function requestProcessor($request)
 		$returnArray['filepath'] = $path;
 		return $returnArray;
 		echo "";
+		break;
+	case "newBundle":
+		$bundleType = $request['bundleType'];
+		$vn = $request['versionnumber'];
+		$filepath = $request['filepath'];
+		$status = $request['status'];
+		newBackup(DBi::$mydb, $vn, $bundleType, $filepath, $status);
 		break;
 	}
 	

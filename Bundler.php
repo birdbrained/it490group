@@ -17,6 +17,10 @@ $vn = readline("Input numerical version number: ");
 readline_add_history($vn);
 $request['versionnumber'] = $vn;
 
+$status = readline("Input $bundleType version $vn status (good|bad|testing): ");
+readline_add_history($status);
+$request['status'] = $status;
+
 $filepath = 'backups/backup_' . $bundleType . '_v' . $vn . '.tgz';
 $request['filepath'] = $filepath;
 echo "filepath: $filepath".PHP_EOL;
