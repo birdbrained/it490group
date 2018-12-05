@@ -5,6 +5,12 @@ function deploy()
 
 }
 
+function scpBundle
+{
+//bundle the correct files in a tarball and send it to Ankit PC
+}
+
+
 function scpCopy($filename, $u, $ip)
 {
 echo shell_exec("sh SCPscript.sh $filename $u $ip");

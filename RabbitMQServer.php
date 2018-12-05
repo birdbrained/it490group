@@ -213,6 +213,8 @@ function requestProcessor($request)
 		doLogout(DBi::$mydb, $request['username']);
 		logErrors($request);
 		break;
+	case "newBundle":		
+		break;	
 	case "update":
 		$bundleType = $request['bundleType'];
 		$path = retreiveFilepath(DBi::$mydb, $bundleType);
