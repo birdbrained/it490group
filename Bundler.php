@@ -7,27 +7,36 @@ require_once('rabbitMQLib.inc');
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 
 $request = array();
-$request['type'] = 'bundle';
-$request['bundletype'] = $argv[1];
-$request['versionnumber'] = $argv[2];
-$filepath = 'backups/backup_' . $argv[1] . '_v' . $argv[2] . '.tgz';
-$request['filepath'] = $filepath;
-echo shell_exec('sh backup.sh ' .$argv[1] . ' ' .$argv[2]) . PHP_EOL;
-$file = fopen($filepath, "rb");
-$contents = fread($file, filesize($filepath));
-fclose($file);
-echo $contents . PHP_EOL;
-$request['contents'] = $contents;
+$request['type'] = 'newbundle';
 
-//$writeFile = fopen("backups/poop.tgz", "wb");
-//fwrite($writeFile, $contents);
-//fclose($writeFile);
+$bundleType = readline("Input bundle type (server|client|frontend): ");
+readline_add_history($bundleType);
+$request['bundletype'] = $bundleType;
+
+$vn = readline("Input numerical version number: ");
+readline_add_history($vn);
+$request['versionnumber'] = $vn;
+
+$status = readline("Input $bundleType version $vn status (good|bad|testing): ");
+readline_add_history($status);
+$request['status'] = $status;
+
+$filepath = 'backups/backup_' . $bundleType . '_v' . $vn . '.tgz';
+$request['filepath'] = $filepath;
+echo "filepath: $filepath".PHP_EOL;
+
+echo shell_exec('sh backup.sh ' . $bundleType . ' ' . $vn) . PHP_EOL;
+
+$path = "/var/www/html/it490group/" . $filepath;
+$ip = readline("Enter IP of deployment server: ");
+readline_add_history($ip);
+echo shell_exec('sh SCPscript.sh ' . $path . ' ankit ' . $ip);
 
 $response = $client->send_request($request);
 
 if ($response['returnCode'] == 0)
 {
-	echo "Successfully sent tarball to the server!\n";
+	echo "Successfully sent tarball to the deployment server!\n";
 }
 else
 {

@@ -123,6 +123,7 @@ function purchase($database, $ID, $price, $u)
 		$s= "INSERT INTO UserTransactions VALUES (NOW(), '$u', '$ID', '$price');";
 		$t = mysqli_query($database, $s);
 		//Add new card to deck
+
 		$s = "Select * from UserDeck where username = '$u' and deckID = '0';";
 		$t = mysqli_query($database, $s);
 		$lru = 0;
@@ -162,6 +163,12 @@ function retreiveFilepath($database, $type)
 	return $filepath;
 }
 
+function newBackup($db, $vn, $type, $filepath, $status)
+{
+	$stmt = "insert into VersionControl values('$vn', '$type', '$filepath', '$status');";
+	$t = mysqli_query($db, $stmt);
+}
+
 function requestProcessor($request)
 {
 	echo "received request of type: ".$request['type'].PHP_EOL;
@@ -197,8 +204,8 @@ function requestProcessor($request)
 		logErrors($request);		
 		break;
 	case "validate_session":
-		return doValidate($request['sessionId']);
 		logErrors($request);
+		return doValidate($request['sessionId']);
 		break;		
 	case "transaction":
 		logErrors($request);
@@ -208,9 +215,31 @@ function requestProcessor($request)
 		logErrors($request);
 		return false;		
 		break;
-	case 	
 	case "logout":
 		doLogout(DBi::$mydb, $request['username']);
+		logErrors($request);
+		break;
+	case "newBundle":		
+		break;	
+	case "update":
+		$bundleType = $request['bundleType'];
+		$path = retreiveFilepath(DBi::$mydb, $bundleType);
+		$path = "/var/www/html/it490group/" . $path;
+		scpCopy($path, $request['user'], $request['ip']);
+		//$binary = returnTarBinary($request, $path);
+		$returnArray = array();
+		$returnArray['returnCode'] = '0';
+		$returnArray['message'] = "Server received request and processed";
+		$returnArray['filepath'] = $path;
+		return $returnArray;
+		echo "";
+		break;
+	case "newBundle":
+		$bundleType = $request['bundleType'];
+		$vn = $request['versionnumber'];
+		$filepath = $request['filepath'];
+		$status = $request['status'];
+		newBackup(DBi::$mydb, $vn, $bundleType, $filepath, $status);
 		break;
 	}
 	
