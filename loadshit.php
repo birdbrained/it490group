@@ -1,54 +1,38 @@
 <?php
 ($db = mysqli_connect('127.0.0.1', 'user', 'password', 'Project')) or die ("poop");
 
-$file = fopen("FoodStats.csv", "r") or die ("No file!");
+$file = fopen("CardFusions.csv", "r") or die ("No file!");
 $i = 0;
 
 while (!feof($file))
 {
 	$line = fgets($file);
-	$wordList = explode("|", $line);
+	echo $line . PHP_EOL;
+	$wordList = explode(",", $line);
 	$cleanList = array();
 
 	foreach ($wordList as $word)
 	{
-		//$cleanWord = str_replace('"', '', $word);
+		//$cleanWord = str_replace('\n', '', $word);
 		array_push($cleanList, $word);
 	}
 	
-	$id = $cleanList[0];
-	if ($id <= 43)
-		continue;
-	echo "id: '$id' ";
-	$name = $cleanList[1];
-	$type = $cleanList[2];
-	$att = $cleanList[3];
-	$def = $cleanList[4];
-	$val = $cleanList[5];
-	$fusable = $cleanList[6];
-	if ($fusable == 'TRUE')
-		$fusable = 1;
-	else
-		$fusable = 0;
-	$hp = $cleanList[7];
-	$desc = $cleanList[8];
-	echo "desc: '$desc' \n";
-	$imgFile = $cleanList[9];
+	$base = $wordList[0];
+	$spice = $wordList[1];
+	$val = $wordList[2];
+	$meep = $wordList[3];
+	$result = substr($meep, 0, -2);
 	
-	$stmt = "insert into Cards values(
-		'$id',
-		'$name',
-		'$type',
-		'$att',
-		'$def',
+	echo "base (" . $base . ") spice (" . $spice . ") val (" . $val . ") result(" . $result . ")" . PHP_EOL;
+	
+	$stmt = "insert into CardFusions values(
+		'$base',
+		'$spice',
 		'$val',
-		'$fusable',
-		'$hp',
-		'$desc',
-		'$imgFile'
+		'$result'
 	)";
 	($table = mysqli_query($db, $stmt, MYSQLI_USE_RESULT)) or die (mysqli_error($db));
 	mysqli_free_result($table);
-	echo !feof($file);
+	//echo !feof($file);
 }
 ?>
