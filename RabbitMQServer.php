@@ -4,6 +4,7 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 require_once('DeployFunctions.php')
+require_once('GameplayFunctions.php')
 
 function logErrors($request){
 	echo $request['type']." : ";	
@@ -221,6 +222,9 @@ function requestProcessor($request)
 		break;
 	case "newBundle":		
 		break;	
+	case "cook":
+		ProcessCook($database);	
+		break;
 	case "update":
 		$bundleType = $request['bundleType'];
 		$path = retreiveFilepath(DBi::$mydb, $bundleType);
