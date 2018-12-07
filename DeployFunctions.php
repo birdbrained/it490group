@@ -5,7 +5,7 @@ function deploy()
 
 }
 
-function scpBundle
+function scpBundle()
 {
 //bundle the correct files in a tarball and send it to Ankit PC
 }
