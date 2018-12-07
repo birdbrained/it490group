@@ -5,38 +5,39 @@ require_once('rabbitMQLib.inc');
 
 function processresponse($response)
 {
-	echo "processing request or whatever \n";
+	//echo "processing request or whatever \n";
 	var_dump($request);
-	echo $response['message'] . PHP_EOL; 
+	//echo $response['message'] . PHP_EOL; 
 }
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 
 $request = array();
 $request['type'] = $_GET['turntype'];
-$request['playerID'] = $GET['playerID'];
+$request['playerID'] = $_GET['playerID'];
 //cook only 
-if (in_array("base", $_GET))
+if ($request['type'] == 'cook')
 {
-	$request['base'] = $GET['base'];
-	$request['spice'] = $GET['spice'];
-	$request['valueSum'] = $GET['valueSum'];
+	$request['base'] = $_GET['base'];
+	$request['spice'] = $_GET['spice'];
+	$request['valueSum'] = $_GET['valueSum'];
 }
 //attack only
-if (in_array("attackVal", $_GET))
+if ($request['type'] == 'attack')
 {
-	$request['attackVal'] = $GET['attackVal'];
-	$request['defenseVal'] = $GET['defenseVal'];
-	$request['defPlayerHealth'] = $GET['defPlayerHealth'];
-	$request['defCardHealth'] = $GET['defCardHealth'];
+	$request['attackVal'] = $_GET['attackVal'];
+	$request['defenseVal'] = $_GET['defenseVal'];
+	$request['defPlayerHealth'] = $_GET['defPlayerHealth'];
+	$request['defCardHealth'] = $_GET['defCardHealth'];
 }
 //eat only
-if (in_array("cardValue", $_GET))
+if ($request['type'] == 'eat')
 {
-	$request['health'] = $GET['health'];
-	$request['cardValue'] = $GET['cardValue'];
+	$request['health'] = $_GET['health'];
+	$request['cardValue'] = $_GET['cardValue'];
 }
 $request['message'] = "Making turn of type " . $request['type'] . PHP_EOL;
-
+//echo "about to send request" . PHP_EOL;
 $response = $client->send_request($request);
-echo "Client received response: returnCode: ". $response['returnCode'] . " message: " . $response['message'] . PHP_EOL;
+echo $response['message'];
+//echo "Client received response: returnCode: ". $response['returnCode'] . " message: " . $response['message'] . PHP_EOL;
 ?>
