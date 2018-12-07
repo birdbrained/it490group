@@ -7,13 +7,16 @@
 		<link rel="stylesheet" href="game.css">
 	</head>
 	<body>
-		<form>
-			Username:<br>
-			<input type="text" name="username"></br>
+		<form name="Paypal Info Form" action="paypalconnect.php">
+			<input type="hidden" name="cmd" value="_xclick" />
+			First Name:<br>
+			<input type="text" name="firstname"></br>
+			Last Name:<br>
+			<input type="text" name="lastname"></br>
+			Email:<br>
+			<input type="text" name="payer_email"/></br>
 			Password:<br>
 			<input type="password" name="password"></br>
-			API Signature:<br>
-			<input type="password" name="signature"></br>
 			<input type="submit" value="Submit"></br>
 		</form> 
 	</body>
