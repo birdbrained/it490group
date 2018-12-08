@@ -8,6 +8,8 @@ $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 
 $request = array();
 $request['type'] = 'update';
+
+$bundleType = readline("");
 $request['bundleType'] = $argv[1];
 $request['user'] = $argv[2];
 $request['ip'] = $argv[3];

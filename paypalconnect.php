@@ -10,9 +10,9 @@ $dbConfig = [
 
 $paypalConfig = [
     'email' => 'am2272@njit.edu',
-    'return_url' => 'http://example.com/paymentsuccess.html',
-    'cancel_url' => 'http://example.com/paymentcancel.html',
-    'notify_url' => '10.0.0.8/IT490Group/index.html'
+    'return_url' => 'http://example.com/paymentsuccess.php',
+    'cancel_url' => 'http://example.com/paymentcancel.php',
+    'notify_url' => '10.0.0.34/IT490Group/index.html'
 ];
 
 $paypalUrl = $enableSandbox ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr';
