@@ -30,8 +30,15 @@ echo shell_exec('sh backup.sh ' . $bundleType . ' ' . $vn) . PHP_EOL;
 $path = "/var/www/html/it490group/" . $filepath;
 $ip = readline("Enter IP of deployment server: ");
 readline_add_history($ip);
-echo shell_exec('sh SCPscript.sh ' . $path . ' ankit ' . $ip);
 
+$name = readline("Enter username of user on the server: ");
+readline_add_history($name);
+
+echo shell_exec('sh SCPscript.sh ' . $path . ' ' . $name . ' ' . $ip);
+
+$request['message'] = "sent a new tarball to the server";
+
+var_dump($request);
 $response = $client->send_request($request);
 
 if ($response['returnCode'] == 0)

@@ -3,8 +3,8 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-require_once('DeployFunctions.php')
-require_once('GameplayFunctions.php')
+require_once('DeployFunctions.php');
+require_once('GameplayFunctions.php');
 
 function logErrors($request){
 	echo $request['type']." : ";	
@@ -18,7 +18,7 @@ class DBi
 }
 
 //Ankit DB
-(DBi::$mydb = mysqli_connect('127.0.0.1', 'user', 'password', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
+(DBi::$mydb = mysqli_connect('10.0.0.5', 'user', 'password', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 
 //($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 if (DBi::$mydb->errno != 0)
@@ -154,7 +154,7 @@ function retreiveFilepath($database, $type)
 
 	$table = mysqli_query($database, $query);
 
-	while ($row = mysqli_fetch_array{$table, MYSQLI_ASSOC))
+	while ($row = mysqli_fetch_array($table, MYSQLI_ASSOC))
 	{
 		// make this version the one to send to client
 		$filepath = $row['path'];
