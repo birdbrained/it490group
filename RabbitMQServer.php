@@ -18,7 +18,7 @@ class DBi
 }
 
 //Ankit DB
-(DBi::$mydb = mysqli_connect('10.0.0.5', 'user', 'password', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
+(DBi::$mydb = mysqli_connect('127.0.0.1', 'user', 'password', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 
 //($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 if (DBi::$mydb->errno != 0)
@@ -223,7 +223,7 @@ function requestProcessor($request)
 	case "newBundle":		
 		break;	
 	case "cook":
-		ProcessCook($database);	
+		ProcessCook(DBi::$mydb, $request);	
 		break;
 	case "update":
 		$bundleType = $request['bundleType'];
@@ -259,7 +259,7 @@ function requestProcessor($request)
 }
 
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
-echo "RabbitMQ Server: BEGIN".PHP_EOL;
+//echo "RabbitMQ Server: BEGIN".PHP_EOL;
 $server->process_requests('requestProcessor');
 exit();
 ?>
