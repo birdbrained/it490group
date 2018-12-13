@@ -1,44 +1,44 @@
 <?php
 
-function ProcessCook($database)
+function ProcessCook($database, $request)
 {
 	$base = $request['base'];
 	$spice = $request['spice'];
 	$valueSum = $request['valueSum'];
-	$result = "no result";
+	$product = "no result";
 	$s = "select * from CardFusions where base = '$base' and spice = '$spice'";
 	$t = mysqli_query($database, $s) or die(mysqli_error($database));
 	if (mysqli_num_rows($t) > 0)
 	{
-		while ($row = mysqli_fetch_array{$table, MYSQLI_ASSOC))
+		while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
 		{
-			$product = $row['product']
+			$product = $row['product'];
 			break;
 		}
-		PrintCardStats($database, $product);
-		return;
+		$stat = PrintCardStats($database, $product);
+		return $stat;
 	}
 	$s = "select * from CardFusions where base = 'any' and spice = '$spice' and valueReq <= '$valueSum' order by valueReq DESC";
 	$t = mysqli_query($database, $s) or die(mysqli_error($database));
 	if (mysqli_num_rows($t) > 0)
 	{
-		while ($row = mysqli_fetch_array{$table, MYSQLI_ASSOC))
+		while ($row = mysqli_fetch_array($table, MYSQLI_ASSOC))
 		{
-			$product = $row['product']
+			$product = $row['product'];
 			break;
 		}
-		PrintCardStats($database, $product);
-		return;
+		$stat = PrintCardStats($database, $product);
+		return $stat;
 	}
 	$s = "select * from Cards where Type = 'Monster' and isFusable = '0' and Value <= '$valueSum' order by Value DESC";
 	$t = mysqli_query($database, $s) or die(mysqli_error($database));
-	while ($row = mysqli_fetch_array{$table, MYSQLI_ASSOC))
+	while ($row = mysqli_fetch_array($table, MYSQLI_ASSOC))
 		{
-			$product = $row['product']
+			$product = $row['product'];
 			break;
 		}
-		PrintCardStats($database, $product);
-		return;
+		$stat = PrintCardStats($database, $product);
+		return $stat;
 	
 
 }
@@ -60,7 +60,7 @@ function PrintCardStats($database, $cardname)
 		$desc = $row['Description'];
 		$img = $row['ImageFilepath'];
 
-		$result .= $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img . ";";
+		return $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img;
 	}
 }
 ?>

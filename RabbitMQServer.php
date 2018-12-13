@@ -3,8 +3,8 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-require_once('DeployFunctions.php')
-require_once('GameplayFunctions.php')
+require_once('DeployFunctions.php');
+require_once('GameplayFunctions.php');
 
 function logErrors($request){
 	echo $request['type']." : ";	
@@ -154,7 +154,7 @@ function retreiveFilepath($database, $type)
 
 	$table = mysqli_query($database, $query);
 
-	while ($row = mysqli_fetch_array{$table, MYSQLI_ASSOC))
+	while ($row = mysqli_fetch_array($table, MYSQLI_ASSOC))
 	{
 		// make this version the one to send to client
 		$filepath = $row['path'];
@@ -220,10 +220,14 @@ function requestProcessor($request)
 		doLogout(DBi::$mydb, $request['username']);
 		logErrors($request);
 		break;
-	case "newBundle":		
-		break;	
 	case "cook":
-		ProcessCook($database);	
+		$stat = ProcessCook(DBi::$mydb, $request);	
+		echo $stat . PHP_EOL;
+		$success = true;
+		$returnArray = array();
+		$returnArray['returnCode'] = '0';
+		$returnArray['message'] = $stat;
+		return $returnArray;
 		break;
 	case "update":
 		$bundleType = $request['bundleType'];
@@ -235,15 +239,16 @@ function requestProcessor($request)
 		$returnArray['returnCode'] = '0';
 		$returnArray['message'] = "Server received request and processed";
 		$returnArray['filepath'] = $path;
+		echo "Client successfully updated!\n";
 		return $returnArray;
-		echo "";
 		break;
-	case "newBundle":
-		$bundleType = $request['bundleType'];
+	case "newbundle":
+		$bundleType = $request['bundletype'];
 		$vn = $request['versionnumber'];
 		$filepath = $request['filepath'];
 		$status = $request['status'];
 		newBackup(DBi::$mydb, $vn, $bundleType, $filepath, $status);
+		$success = true;
 		break;
 	}
 	
