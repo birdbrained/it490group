@@ -1,30 +1,46 @@
 <?php
+class DBi
+{
+	public static $db;
+}
 function hotswapServer($ip)
 {
-	
-	exec("ssh -t ankit@" . $ip . "'/var/www/html/it490group/RabbitMQServer.php'");
+	echo "hotswap server called\n";	
+	exec("ssh -t ankit@" . $ip . " '/var/www/html/it490group/RabbitMQServer.php'");
+	echo "server started\n";
 }
 
 
 function errorLoop($db, $ip)
 { 
-	if ($db ->errno !=0)
+	$t = $db->query("select * from VersionControl;");
+	/*while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
 	{
-	hotswapServer();
+		echo "i got a " . $row['status'] . PHP_EOL;
 	}
-	else 
+	*/	
+	if (isset($db))
 	{
-		sleep(15);
-		errorLoop();
+
+		if ($db ->errno !=0)
+		{
+		hotswapServer($ip);
+		}
+		else 
+		{
+			echo"zzz... I sleep...\n";
+			sleep(4);
+			errorLoop($db, $ip);
+		}
 	}
+	else
+	hotswapServer($ip);
 }
 
 $ip = "10.0.0.33";
-class DBi
-{
-	public static $dp;
-}
+echo "about to connect to mysql\n";
 DBi::$db = mysqli_connect($ip, 'user', 'password', 'Project', '3306');
-errorLoop(DBi::$dp, $ip);
+echo "connection established\n";
+errorLoop(DBi::$db, $ip);
 
 ?>
