@@ -36,7 +36,17 @@ button
 	background-color: #00238b;
 	border: none;
 	color: white;
+	cursor: pointer;
+}
+
+.funds
+{
+	font-size: 30 px;
+	padding: 6px 12px;
+}
+
+.log
+{
 	font-size: 36px;
 	padding: 8px 16px;
-	cursor: pointer;
 }

@@ -3,6 +3,8 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
+require_once('DeployFunctions.php');
+require_once('GameplayFunctions.php');
 
 function logErrors($request){
 	echo $request['type']." : ";	
@@ -122,6 +124,7 @@ function purchase($database, $ID, $price, $u)
 		$s= "INSERT INTO UserTransactions VALUES (NOW(), '$u', '$ID', '$price');";
 		$t = mysqli_query($database, $s);
 		//Add new card to deck
+
 		$s = "Select * from UserDeck where username = '$u' and deckID = '0';";
 		$t = mysqli_query($database, $s);
 		$lru = 0;
@@ -141,6 +144,30 @@ function purchase($database, $ID, $price, $u)
 	}
 	else
 		echo "get more money!";
+}
+
+function retreiveFilepath($database, $type)
+{
+	$filepath = "";
+
+	$query = "SELECT * FROM VersionControl WHERE type = '$type' AND status = 'good' ORDER BY version DESC";
+
+	$table = mysqli_query($database, $query);
+
+	while ($row = mysqli_fetch_array($table, MYSQLI_ASSOC))
+	{
+		// make this version the one to send to client
+		$filepath = $row['path'];
+		break;
+	}
+
+	return $filepath;
+}
+
+function newBackup($db, $vn, $type, $filepath, $status)
+{
+	$stmt = "insert into VersionControl values('$vn', '$type', '$filepath', '$status');";
+	$t = mysqli_query($db, $stmt);
 }
 
 function requestProcessor($request)
@@ -178,12 +205,12 @@ function requestProcessor($request)
 		logErrors($request);		
 		break;
 	case "validate_session":
-		return doValidate($request['sessionId']);
 		logErrors($request);
+		return doValidate($request['sessionId']);
 		break;		
 	case "transaction":
-		return purchase(DBi::$mydb, $request['ID'], $request['price'], $request['username']);
 		logErrors($request);
+		return purchase(DBi::$mydb, $request['ID'], $request['price'], $request['username']);
 		break;
 	case "error":
 		logErrors($request);
@@ -191,6 +218,32 @@ function requestProcessor($request)
 		break;
 	case "logout":
 		doLogout(DBi::$mydb, $request['username']);
+		logErrors($request);
+		break;
+	case "newBundle":		
+		break;	
+	case "cook":
+		ProcessCook(DBi::$mydb, $request);	
+		break;
+	case "update":
+		$bundleType = $request['bundleType'];
+		$path = retreiveFilepath(DBi::$mydb, $bundleType);
+		$path = "/var/www/html/it490group/" . $path;
+		scpCopy($path, $request['user'], $request['ip']);
+		//$binary = returnTarBinary($request, $path);
+		$returnArray = array();
+		$returnArray['returnCode'] = '0';
+		$returnArray['message'] = "Server received request and processed";
+		$returnArray['filepath'] = $path;
+		return $returnArray;
+		echo "";
+		break;
+	case "newBundle":
+		$bundleType = $request['bundleType'];
+		$vn = $request['versionnumber'];
+		$filepath = $request['filepath'];
+		$status = $request['status'];
+		newBackup(DBi::$mydb, $vn, $bundleType, $filepath, $status);
 		break;
 	}
 	
@@ -206,7 +259,7 @@ function requestProcessor($request)
 }
 
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
-echo "RabbitMQ Server: BEGIN".PHP_EOL;
+//echo "RabbitMQ Server: BEGIN".PHP_EOL;
 $server->process_requests('requestProcessor');
 exit();
 ?>
