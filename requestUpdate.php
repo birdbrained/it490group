@@ -9,10 +9,17 @@ $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 $request = array();
 $request['type'] = 'update';
 
-$bundleType = readline("");
-$request['bundleType'] = $argv[1];
-$request['user'] = $argv[2];
-$request['ip'] = $argv[3];
+$bundleType = readline("Enter the type of bundle you are requesting (server|client|frontend): ");
+readline_add_history($bundleType);
+$request['bundleType'] = $bundleType;
+
+$user = readline("Enter your username: ");
+readline_add_history($user);
+$request['user'] = $user;
+
+$ip = readline("Enter your IP: ");
+readline_add_history($ip);
+$request['ip'] = $ip;
 
 echo "Calling rabbitmq...\n";
 $response = $client->send_request($request);
@@ -25,7 +32,7 @@ if ($response['returnCode'] == 0)
 	//$contents = $response['contents'];
 	$filename = $response['filepath'];
 	//echo "contents: ($contents)\nfilename: ($filename)\n";
-	extractClient($contents, $filename);
+	extractClient("", $filename);
 }
 else
 {
