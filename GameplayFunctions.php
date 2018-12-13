@@ -33,12 +33,12 @@ function ProcessCook($database, $request)
 	$s = "select * from Cards where Type = 'Monster' and isFusable = '0' and Value <= '$valueSum' order by Value DESC";
 	$t = mysqli_query($database, $s) or die(mysqli_error($database));
 	while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
-	{
-		$product = $row['product'];
-		break;
-	}
-	PrintCardStats($database, $product);
-	return;
+		{
+			$product = $row['product'];
+			break;
+		}
+		PrintCardStats($database, $product);
+		return;
 	
 
 }
