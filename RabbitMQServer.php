@@ -182,6 +182,27 @@ function newBackup($db, $vn, $type, $filepath, $status)
 	$t = mysqli_query($db, $stmt);
 }
 
+function updateBundleInformation($db, $bundleType, $num, $status)
+{
+	$stmt = "select * from VersionControl where type='$bundleType' and version='$num';";
+	$t = mysqli_query($db, $stmt);
+	if (mysqli_num_rows($t) == 0)
+	{
+		$arr = array();
+		$arr['returnCode'] = 2;
+		$arr['message'] = $bundleType . " version " . $num . " not in the database; could not update.";
+		return $arr;
+	}
+	else
+	{
+		$stmt = "update VersionControl set status='$status' where type='$bundleType' and version='$num';";
+		$arr = array();
+		$arr['returnCode'] = 0;
+		$arr['message'] = "Successfully updated entry.";
+		return $arr;
+	}
+}
+
 function requestProcessor($request)
 {
 	echo "received request of type: ".$request['type'].PHP_EOL;
@@ -250,6 +271,12 @@ function requestProcessor($request)
 		$returnArray['filepath'] = $path;
 		return $returnArray;
 		echo "";
+		break;
+	case "updateBundle":
+		$bundleType = $request['bundleType'];
+		$num = $request['versionNum'];
+		$status = $request['status'];
+		return updateBundleInformation(DBi::$mydb, $bundleType, $num, $status);
 		break;
 	case "newBundle":
 		$bundleType = $request['bundleType'];
