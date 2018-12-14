@@ -30,8 +30,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     [SerializeField]
     private PlayerController player1;
+    public PlayerController Player1
+    {
+        get
+        {
+            return player1;
+        }
+    }
     [SerializeField]
     private PlayerController player2;
+    public PlayerController Player2
+    {
+        get
+        {
+            return player2;
+        }
+    }
     [SerializeField]
     private string dbIP = "0.0.0.0";
     [SerializeField]
@@ -47,6 +61,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     private GameObject shopPanel;
     [SerializeField]
     private GameObject shopEntryPrefab;
+    [SerializeField]
+    private GameObject cardObj;
+    public GameObject CardObj
+    {
+        get
+        {
+            return cardObj;
+        }
+    }
     [SerializeField]
     private Text resultText;
 
