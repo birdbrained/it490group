@@ -5,7 +5,7 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 require_once('DeployFunctions.php');
 require_once('GameplayFunctions.php');
-require_once('account.php');
+include 'account.php';
 
 function logErrors($request){
 	echo $request['type']." : ";	
