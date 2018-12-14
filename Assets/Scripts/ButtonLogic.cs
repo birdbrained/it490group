@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public class ButtonLogic : MonoBehaviour {
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
 		
 	}
 	

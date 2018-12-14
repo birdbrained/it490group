@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public enum CardType
@@ -12,16 +13,38 @@ public enum CardType
     CT_Superfood
 };
 
-public class Card : MonoBehaviour
+public enum CardStatus
+{
+    CS_Deck,
+    CS_Hand,
+    CS_Bench,
+    CS_Active
+}
+
+public class Card : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField]
     private int ID = 0;
     [SerializeField]
     private string cardName = "undefined";
+    public string CardName
+    {
+        get
+        {
+            return cardName;
+        }
+    }
     [SerializeField]
     private string cardDescription = "undefined";
     [SerializeField]
     private CardType cardType = CardType.CT_NULL;
+    public CardType CardType
+    {
+        get
+        {
+            return cardType;
+        }
+    }
     [SerializeField]
     private string imageFilepath = "Sprites/none";
     [SerializeField]
@@ -32,8 +55,22 @@ public class Card : MonoBehaviour
     private int defenseAmount = 0;
     [SerializeField]
     private int value = 0;
+    public int CardValue
+    {
+        get
+        {
+            return value;
+        }
+    }
     [SerializeField]
     private bool isFusable = false;
+    public bool IsFusable
+    {
+        get
+        {
+            return isFusable;
+        }
+    }
 
     //ui stuff
     [SerializeField]
@@ -50,11 +87,29 @@ public class Card : MonoBehaviour
     private Text defenseText;
     [SerializeField]
     private Text valueText;
+    [SerializeField]
+    private Outline cardOutline;
+    public Outline CardOutline
+    {
+        get
+        {
+            return cardOutline;
+        }
+    }
+
+    public CardStatus cardStatus;
+    public int ownedByPlayer = 1;
+    public int Index = 0;
 
 	// Use this for initialization
 	void Start ()
     {
-		if (nameText != null)
+        UpdateCard();
+	}
+
+    public void UpdateCard()
+    {
+        if (nameText != null)
         {
             nameText.text = cardName;
         }
@@ -90,7 +145,7 @@ public class Card : MonoBehaviour
         {
             valueText.text = value.ToString();
         }
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -128,10 +183,109 @@ public class Card : MonoBehaviour
         defenseAmount = defense;
         value = val;
         isFusable = fusable;
+        cardStatus = CardStatus.CS_Deck;
+    }
+
+    public void SetupCardFromCard(Card card)
+    {
+        ID = card.ID;
+        cardName = card.cardName;
+        cardDescription = card.cardDescription;
+        cardType = card.cardType;
+        imageFilepath = card.imageFilepath;
+        attackAmount = card.attackAmount;
+        defenseAmount = card.defenseAmount;
+        value = card.value;
+        isFusable = card.isFusable;
+        cardStatus = CardStatus.CS_Deck;
+    }
+
+    public void SetCardOwnership(int playerNum)
+    {
+        if (playerNum < 1 || playerNum > 2)
+        {
+            return;
+        }
+        ownedByPlayer = playerNum;
     }
 
     public int GetCardID()
     {
         return ID;
     }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log("clicked on " + gameObject.name);
+
+        PlayerController player;
+        if (ownedByPlayer == 1)
+        {
+            player = GameManager.Instance.Player1;
+            //gameObject.transform.SetParent(GameManager.Instance.Player1.GetPlayerBenchPanel(ownedByPlayer).transform);
+        }
+        else
+        {
+            player = GameManager.Instance.Player2;
+            //gameObject.transform.SetParent(GameManager.Instance.Player2.GetPlayerBenchPanel(ownedByPlayer).transform);
+        }
+
+        switch (cardStatus)
+        {
+            case CardStatus.CS_Hand:
+                //move card to player's bench, if it is a base
+                if (cardType == CardType.CT_Base)
+                {
+                    switch (player.CurrPlayerState)
+                    {
+                        case PlayerState.PS_Selecting:
+                            player.MoveCardToBench(this);
+                            break;
+                        case PlayerState.PS_Cook:
+                            player.CookSelectBase(this);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else if (cardType == CardType.CT_Spice)
+                {
+                    if (player.CurrPlayerState == PlayerState.PS_Cook)
+                    {
+                        player.CookSelectSpice(this);
+                    }
+                }
+                break;
+            case CardStatus.CS_Bench:
+                Debug.Log("Card on bench!");
+                if (cardType == CardType.CT_Base || cardType == CardType.CT_Monster || cardType == CardType.CT_Superfood)
+                {
+                    switch (player.CurrPlayerState)
+                    {
+                        case PlayerState.PS_Selecting:
+                            player.MoveCardToActiveSlot(this);
+                            break;
+                        case PlayerState.PS_Cook:
+                            player.CookSelectBase(this);
+                            break;
+                        default:
+                            break;
+                    }   
+                }
+                break;
+            case CardStatus.CS_Active:
+                if (player.CurrPlayerState == PlayerState.PS_Cook)
+                {
+                    player.CookSelectBase(this);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /*public void Drag()
+    {
+        transform.position = Input.mousePosition;
+    }*/
 }

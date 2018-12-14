@@ -146,6 +146,18 @@ function purchase($database, $ID, $price, $u)
 		echo "get more money!";
 }
 
+function addFunds($database, $email, $amount)
+{
+	$money = (int)$amount * 100;
+	$moneyy = $money * -1;
+
+	$stmt = "update Users set totalMoney='totalMoney+$money' where email='$email';";
+	$t = mysqli_query($database, $stmt);
+	
+	$stmt = "insert into UserTransactions values('NOW()', '$email', '0', '$moneyy');";
+	$t = mysqli_query($database, $stmt);
+}
+
 function retreiveFilepath($database, $type)
 {
 	$filepath = "";
@@ -203,6 +215,7 @@ function requestProcessor($request)
 			return array("returnCode" => '2', "message" => "Registration error");
 		}
 		logErrors($request);		
+		$success = true;
 		break;
 	case "validate_session":
 		logErrors($request);
@@ -219,15 +232,11 @@ function requestProcessor($request)
 	case "logout":
 		doLogout(DBi::$mydb, $request['username']);
 		logErrors($request);
+		$success = true;
 		break;
 	case "cook":
-		$stat = ProcessCook(DBi::$mydb, $request);	
-		echo $stat . PHP_EOL;
+		ProcessCook(DBi::$mydb, $request);	
 		$success = true;
-		$returnArray = array();
-		$returnArray['returnCode'] = '0';
-		$returnArray['message'] = $stat;
-		return $returnArray;
 		break;
 	case "update":
 		$bundleType = $request['bundleType'];
@@ -250,6 +259,11 @@ function requestProcessor($request)
 		newBackup(DBi::$mydb, $vn, $bundleType, $filepath, $status);
 		$success = true;
 		break;
+	case "addfunds":
+		$amount = $request['amount'];
+		addFunds(DBi::$mydb, $request['email'], $amount);
+		$success = true;
+		break;
 	}
 	
 
@@ -264,7 +278,7 @@ function requestProcessor($request)
 }
 
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
-echo "RabbitMQ Server: BEGIN".PHP_EOL;
+//echo "RabbitMQ Server: BEGIN".PHP_EOL;
 $server->process_requests('requestProcessor');
 exit();
 ?>

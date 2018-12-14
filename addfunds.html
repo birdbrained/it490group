@@ -5,16 +5,20 @@
 		<h2>FLOUR POWER</h2>
 		<h3>Add Funds</h3>
 		<link rel="stylesheet" href="game.css">
+		<script type="text/javascript" src="fundVal.js"></script>
 	</head>
 	<body>
-		<form>
-			Username:<br>
-			<input type="text" name="username"></br>
+		<form name="Paypal Info Form" action="paypalconnect.php" method="post" onsubmit="return validateForm()">
+			<input type="hidden" name="cmd" value="_xclick" />
+			First Name:<br>
+			<input type="text" name="firstname"></br>
+			Last Name:<br>
+			<input type="text" name="lastname"></br>
+			Email:<br>
+			<input type="text" name="payer_email"/></br>
 			Password:<br>
 			<input type="password" name="password"></br>
-			API Signature:<br>
-			<input type="password" name="signature"></br>
-			<input type="submit" value="Submit"></br>
+			<input type="submit" class="button" value="Submit"></br>
 		</form> 
 	</body>
 </html>
