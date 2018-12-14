@@ -5,6 +5,7 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 require_once('DeployFunctions.php');
 require_once('GameplayFunctions.php');
+include 'account.php';
 
 function logErrors($request){
 	echo $request['type']." : ";	
@@ -18,7 +19,7 @@ class DBi
 }
 
 //Ankit DB
-(DBi::$mydb = mysqli_connect('127.0.0.1', 'user', 'password', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
+(DBi::$mydb = mysqli_connect('127.0.0.1', $username, $password, $project, '3306') ) or die ("failed to connect".PHP_EOL);
 
 //($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 if (DBi::$mydb->errno != 0)
