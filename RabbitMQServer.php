@@ -196,6 +196,7 @@ function updateBundleInformation($db, $bundleType, $num, $status)
 	else
 	{
 		$stmt = "update VersionControl set status='$status' where type='$bundleType' and version='$num';";
+		$t = mysqli_query($db, $stmt);
 		$arr = array();
 		$arr['returnCode'] = 0;
 		$arr['message'] = "Successfully updated entry.";

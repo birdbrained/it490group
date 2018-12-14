@@ -14,11 +14,12 @@ function hotswapServer($ip)
 function errorLoop($db, $ip)
 { 
 	$t = $db->query("select * from VersionControl;");
-	/*while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
+	/*	
+	while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
 	{
 		echo "i got a " . $row['status'] . PHP_EOL;
 	}
-	*/	
+	*/
 	if (isset($db))
 	{
 
