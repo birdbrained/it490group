@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
@@ -67,6 +68,19 @@ else {
     'payer_email' => $_POST['payer_email'],
     'custom' => $_POST['custom'],
     ];
+
+	$_SESSION['amount'] = $_POST['mc_gross'];
+	$_SESSION['email'] = $_POST['payer_email'];
+
+	/*$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+	$request = array();
+	$request['type'] = "addfunds";
+	$request['amount'] = $_POST['mc_gross'];
+	$request['email'] = $_POST['payer_email'];
+	$request['message'] = "Adding funds...";
+	$response = $client->send_request($request);
+	echo "Client received response: returnCode: ". $response['returnCode'] . " message: " . $response['message'] . PHP_EOL;*/
+
 	if (verifyTransaction($_POST) && checkTxnid($data['txn_id'])) {
 	    if (addPayment($data) !== false) {
 		// Payment successfully added.
