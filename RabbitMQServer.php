@@ -148,6 +148,7 @@ function purchase($database, $ID, $price, $u)
 
 function addFunds($database, $email, $amount)
 {
+	echo "email ($email) amount ($amount)\n";
 	$money = (int)$amount * 100;
 	$moneyy = $money * -1;
 
