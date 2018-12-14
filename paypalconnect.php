@@ -69,10 +69,7 @@ else {
     'custom' => $_POST['custom'],
     ];
 
-	$d = print_r($data, true);
-	$f = fopen('test.txt', 'w');
-	fwrite($d);
-	fclose($f);
+	file_put_contents('test.txt', print_r($data, true));
 
 	$_SESSION['amount'] = $_POST['mc_gross'];
 	$_SESSION['email'] = $_POST['payer_email'];
