@@ -6,3 +6,4 @@ Library/
 rpc/
 Temp/
 UnityPackageManager/
+*.sql

@@ -152,10 +152,10 @@ function addFunds($database, $email, $amount)
 	$money = (int)$amount * 100;
 	$moneyy = $money * -1;
 
-	$stmt = "update Users set totalMoney='totalMoney+$money' where email='$email';";
+	$stmt = "update Users set totalMoney=totalMoney+'$money' where email='$email';";
 	$t = mysqli_query($database, $stmt);
 	
-	$stmt = "insert into UserTransactions values('NOW()', '$email', '0', '$moneyy');";
+	$stmt = "insert into UserTransactions values(NOW(), '$email', '0', '$moneyy');";
 	$t = mysqli_query($database, $stmt);
 }
 
