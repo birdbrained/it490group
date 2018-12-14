@@ -1,17 +1,18 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-		<title>FLOUR POWER | Payment Successful</title>
-		<center><h2>FLOUR POWER</h2></center>
-		<center><h3>Fistful of Dough</h3><center>
-		<link rel="stylesheet" href="game.css">
-	</head>
-	<body>
-		<?php	
-			session_start();
-			require_once('path.inc');
-			require_once('get_host_info.inc');
-			require_once('rabbitMQLib.inc');
+<?php
+session_start();
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
+
+echo '<html>';
+	echo '<head>';
+		echo '<title>FLOUR POWER | Payment Successful</title>';
+		echo '<center><h2>FLOUR POWER</h2></center>';
+		echo '<center><h3>Fistful of Dough</h3><center>';
+		echo '<link rel="stylesheet" href="game.css">';
+	echo '</head><body>';
+		//<?php	
+			
 
 			echo "Payment successful!<br>";
 
@@ -26,6 +27,7 @@
 
 			echo "Returning to the game page...";
 			header( "refresh:5; url=game.php");
-		?>
-	</body>
-</html>
+		
+	echo '</body>';
+echo '</html>';
+?>
