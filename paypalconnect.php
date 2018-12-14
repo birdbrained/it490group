@@ -67,18 +67,9 @@ else {
     'payer_email' => $_POST['payer_email'],
     'custom' => $_POST['custom'],
     ];
-
 	if (verifyTransaction($_POST) && checkTxnid($data['txn_id'])) {
 	    if (addPayment($data) !== false) {
 		// Payment successfully added.
-		$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
-		$request = array();
-		$request['type'] = "addfunds";
-		$request['amount'] = $_POST['mc_gross'];
-		$request['email'] = $_POST['payer_email'];
-		$request['message'] = "Adding funds...";
-		$response = $client->send_request($request);
-		echo "Client received response: returnCode: ". $response['returnCode'] . " message: " . $response['message'] . PHP_EOL;
 	    }
 	}
 }
