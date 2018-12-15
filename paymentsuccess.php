@@ -15,16 +15,15 @@ echo '<html>';
 			
 
 			echo "Payment successful!<br>";
-
 			$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 			$request = array();
 			$request['type'] = "addfunds";
-			$request['amount'] = $_SESSION['amount'];
+			$request['amount'] = 5;
 			$request['email'] = $_SESSION['email'];
 			$request['message'] = "Adding funds...";
 			$response = $client->send_request($request);
 			echo "Client received response: returnCode: ". $response['returnCode'] . " message: " . $response['message'] . PHP_EOL;
-
+			
 			echo "Returning to the game page...";
 			header( "refresh:5; url=game.php");
 		

@@ -51,8 +51,22 @@ public class Card : MonoBehaviour, IPointerClickHandler
     private Sprite imageSprite;
     [SerializeField]
     private int attackAmount = 0;
+    public int AttackAmount
+    {
+        get
+        {
+            return attackAmount;
+        }
+    }
     [SerializeField]
     private int defenseAmount = 0;
+    public int DefenseAmount
+    {
+        get
+        {
+            return defenseAmount;
+        }
+    }
     [SerializeField]
     private int value = 0;
     public int CardValue
@@ -71,6 +85,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
             return isFusable;
         }
     }
+    [SerializeField]
+    private int cardHP;
 
     //ui stuff
     [SerializeField]
@@ -99,6 +115,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public CardStatus cardStatus;
     public int ownedByPlayer = 1;
+    private PlayerController player;
     public int Index = 0;
 
 	// Use this for initialization
@@ -148,7 +165,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
 		
 	}
 
@@ -172,7 +190,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public void SetupCard(int id, string name, string description, CardType type, string imgFilepath, int attack, int defense, int val, bool fusable)
+    public void SetupCard(int id, string name, string description, CardType type, string imgFilepath, int attack, int defense, int val, bool fusable, int hp)
     {
         ID = id;
         cardName = name;
@@ -183,6 +201,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         defenseAmount = defense;
         value = val;
         isFusable = fusable;
+        cardHP = hp;
         cardStatus = CardStatus.CS_Deck;
     }
 
@@ -197,6 +216,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         defenseAmount = card.defenseAmount;
         value = card.value;
         isFusable = card.isFusable;
+        cardHP = card.cardHP;
         cardStatus = CardStatus.CS_Deck;
     }
 
@@ -207,18 +227,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
             return;
         }
         ownedByPlayer = playerNum;
-    }
-
-    public int GetCardID()
-    {
-        return ID;
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        Debug.Log("clicked on " + gameObject.name);
-
-        PlayerController player;
         if (ownedByPlayer == 1)
         {
             player = GameManager.Instance.Player1;
@@ -229,6 +237,42 @@ public class Card : MonoBehaviour, IPointerClickHandler
             player = GameManager.Instance.Player2;
             //gameObject.transform.SetParent(GameManager.Instance.Player2.GetPlayerBenchPanel(ownedByPlayer).transform);
         }
+    }
+
+    public int GetCardID()
+    {
+        return ID;
+    }
+
+    public void CardTakeDamage(int damageAmount)
+    {
+        cardHP -= damageAmount;
+        if (cardHP <= 0)
+        {
+            //destroy the card
+        }
+    }
+
+    public bool IsCardDead()
+    {
+        return cardHP <= 0;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log("clicked on " + gameObject.name);
+
+        /*PlayerController player;
+        if (ownedByPlayer == 1)
+        {
+            player = GameManager.Instance.Player1;
+            //gameObject.transform.SetParent(GameManager.Instance.Player1.GetPlayerBenchPanel(ownedByPlayer).transform);
+        }
+        else
+        {
+            player = GameManager.Instance.Player2;
+            //gameObject.transform.SetParent(GameManager.Instance.Player2.GetPlayerBenchPanel(ownedByPlayer).transform);
+        }*/
 
         switch (cardStatus)
         {
@@ -283,9 +327,4 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 break;
         }
     }
-
-    /*public void Drag()
-    {
-        transform.position = Input.mousePosition;
-    }*/
 }
