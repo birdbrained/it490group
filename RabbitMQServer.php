@@ -5,6 +5,7 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 require_once('DeployFunctions.php');
 require_once('GameplayFunctions.php');
+include 'account.php';
 
 function logErrors($request){
 	echo $request['type']." : ";	
@@ -18,7 +19,7 @@ class DBi
 }
 
 //Ankit DB
-(DBi::$mydb = mysqli_connect('127.0.0.1', 'user', 'password', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
+(DBi::$mydb = mysqli_connect('127.0.0.1', $username, $password, $project, '3306') ) or die ("failed to connect".PHP_EOL);
 
 //($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 if (DBi::$mydb->errno != 0)
@@ -148,13 +149,14 @@ function purchase($database, $ID, $price, $u)
 
 function addFunds($database, $email, $amount)
 {
+	echo "email ($email) amount ($amount)\n";
 	$money = (int)$amount * 100;
 	$moneyy = $money * -1;
 
-	$stmt = "update Users set totalMoney='totalMoney+$money' where email='$email';";
+	$stmt = "update Users set totalMoney=totalMoney+'$money' where email='$email';";
 	$t = mysqli_query($database, $stmt);
 	
-	$stmt = "insert into UserTransactions values('NOW()', '$email', '0', '$moneyy');";
+	$stmt = "insert into UserTransactions values(NOW(), '$email', '0', '$moneyy');";
 	$t = mysqli_query($database, $stmt);
 }
 
