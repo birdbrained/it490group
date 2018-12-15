@@ -22,7 +22,7 @@ function ProcessCook($database, $request)
 	$t = mysqli_query($database, $s) or die(mysqli_error($database));
 	if (mysqli_num_rows($t) > 0)
 	{
-		while ($row = mysqli_fetch_array($table, MYSQLI_ASSOC))
+		while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
 		{
 			$product = $row['product'];
 			break;
@@ -32,7 +32,7 @@ function ProcessCook($database, $request)
 	}
 	$s = "select * from Cards where Type = 'Monster' and isFusable = '0' and Value <= '$valueSum' order by Value DESC";
 	$t = mysqli_query($database, $s) or die(mysqli_error($database));
-	while ($row = mysqli_fetch_array($table, MYSQLI_ASSOC))
+	while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
 		{
 			$product = $row['product'];
 			break;
@@ -60,7 +60,7 @@ function PrintCardStats($database, $cardname)
 		$desc = $row['Description'];
 		$img = $row['ImageFilepath'];
 
-		return $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img;
+		echo $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img;
 	}
 }
 ?>
