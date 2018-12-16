@@ -32,7 +32,7 @@ public class ShopEntry : MonoBehaviour
         return myCard;
     }
 
-    public void SetupMyCard(int id, string name, string description, CardType type, string imgFilepath, int attack, int defense, int val, bool fusable)
+    public void SetupMyCard(int id, string name, string description, CardType type, string imgFilepath, int attack, int defense, int val, bool fusable, int hp)
     {
         Debug.LogFormat("ID ({0}), Name ({1}), Description ({2}), Type ({3}), imgFilepath ({4}), Attack ({5}), Defense ({6}), Value ({7}), Fusable ({8})",
             id,
@@ -46,7 +46,7 @@ public class ShopEntry : MonoBehaviour
             fusable.ToString());
         if (myCard != null)
         {
-            myCard.SetupCard(id, name, description, type, imgFilepath, attack, defense, val, fusable);
+            myCard.SetupCard(id, name, description, type, imgFilepath, attack, defense, val, fusable, hp);
             myCard.UpdateImage();
         }
         else

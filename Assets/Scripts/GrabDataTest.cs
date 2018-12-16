@@ -9,10 +9,10 @@ public class GrabDataTest : MonoBehaviour
     private Text dataText;
     private string data = "";
     private string[] items;
-    [SerializeField]
+    /*[SerializeField]
     private string IP;
     [SerializeField]
-    private InputField ipInput;
+    private InputField ipInput;*/
 
 	// Use this for initialization
 	void Start ()
@@ -45,7 +45,8 @@ public class GrabDataTest : MonoBehaviour
         //URL and gets the data of whatever is echo'd by the PHP page.
         //So maybe make a new php file that just spits out data?
         //string addr = "http://" + IP + "/it490group/grabTestData.php";
-        string addr = "http://" + ipInput.text + "/it490group/grabTestData.php";
+        //string addr = "http://" + ipInput.text + "/it490group/grabTestData.php";
+        string addr = "http://10.0.0.34/it490group/grabTestData.php";
         WWW request = new WWW(addr); 
 
         //A web request takes some time to execute, so we wait for the
