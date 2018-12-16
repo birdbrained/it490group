@@ -5,6 +5,7 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 require_once('DeployFunctions.php');
 require_once('GameplayFunctions.php');
+include 'account.php';
 
 function logErrors($request){
 	echo $request['type']." : ";	
@@ -18,7 +19,7 @@ class DBi
 }
 
 //Ankit DB
-(DBi::$mydb = mysqli_connect('127.0.0.1', 'user', 'password', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
+(DBi::$mydb = mysqli_connect('127.0.0.1', $username, $password, $project, '3306') ) or die ("failed to connect".PHP_EOL);
 
 //($mydb = mysqli_connect('127.0.0.1', 'user', 'Pasta_Fazool!?', 'Project', '3306') ) or die ("failed to connect".PHP_EOL);
 if (DBi::$mydb->errno != 0)
@@ -146,6 +147,19 @@ function purchase($database, $ID, $price, $u)
 		echo "get more money!";
 }
 
+function addFunds($database, $email, $amount)
+{
+	echo "email ($email) amount ($amount)\n";
+	$money = (int)$amount * 100;
+	$moneyy = $money * -1;
+
+	$stmt = "update Users set totalMoney=totalMoney+'$money' where email='$email';";
+	$t = mysqli_query($database, $stmt);
+	
+	$stmt = "insert into UserTransactions values(NOW(), '$email', '0', '$moneyy');";
+	$t = mysqli_query($database, $stmt);
+}
+
 function retreiveFilepath($database, $type)
 {
 	$filepath = "";
@@ -168,6 +182,28 @@ function newBackup($db, $vn, $type, $filepath, $status)
 {
 	$stmt = "insert into VersionControl values('$vn', '$type', '$filepath', '$status');";
 	$t = mysqli_query($db, $stmt);
+}
+
+function updateBundleInformation($db, $bundleType, $num, $status)
+{
+	$stmt = "select * from VersionControl where type='$bundleType' and version='$num';";
+	$t = mysqli_query($db, $stmt);
+	if (mysqli_num_rows($t) == 0)
+	{
+		$arr = array();
+		$arr['returnCode'] = 2;
+		$arr['message'] = $bundleType . " version " . $num . " not in the database; could not update.";
+		return $arr;
+	}
+	else
+	{
+		$stmt = "update VersionControl set status='$status' where type='$bundleType' and version='$num';";
+		$t = mysqli_query($db, $stmt);
+		$arr = array();
+		$arr['returnCode'] = 0;
+		$arr['message'] = "Successfully updated entry.";
+		return $arr;
+	}
 }
 
 function requestProcessor($request)
@@ -203,6 +239,7 @@ function requestProcessor($request)
 			return array("returnCode" => '2', "message" => "Registration error");
 		}
 		logErrors($request);		
+		$success = true;
 		break;
 	case "validate_session":
 		logErrors($request);
@@ -219,11 +256,11 @@ function requestProcessor($request)
 	case "logout":
 		doLogout(DBi::$mydb, $request['username']);
 		logErrors($request);
+		$success = true;
 		break;
-	case "newBundle":		
-		break;	
 	case "cook":
 		ProcessCook(DBi::$mydb, $request);	
+		$success = true;
 		break;
 	case "update":
 		$bundleType = $request['bundleType'];
@@ -238,12 +275,24 @@ function requestProcessor($request)
 		return $returnArray;
 		echo "";
 		break;
+	case "updateBundle":
+		$bundleType = $request['bundleType'];
+		$num = $request['versionNum'];
+		$status = $request['status'];
+		return updateBundleInformation(DBi::$mydb, $bundleType, $num, $status);
+		break;
 	case "newBundle":
 		$bundleType = $request['bundleType'];
 		$vn = $request['versionnumber'];
 		$filepath = $request['filepath'];
 		$status = $request['status'];
 		newBackup(DBi::$mydb, $vn, $bundleType, $filepath, $status);
+		$success = true;
+		break;
+	case "addfunds":
+		$amount = $request['amount'];
+		addFunds(DBi::$mydb, $request['email'], $amount);
+		$success = true;
 		break;
 	}
 	
