@@ -1328,6 +1328,10 @@ MonoBehaviour:
   attackText: {fileID: 1122869811}
   defenseText: {fileID: 311102972}
   valueText: {fileID: 190917560}
+  cardOutline: {fileID: 0}
+  cardStatus: 0
+  ownedByPlayer: 1
+  Index: 0
 --- !u!1 &890280898
 GameObject:
   m_ObjectHideFlags: 0
@@ -1604,7 +1608,13 @@ MonoBehaviour:
   playerName: 'Player #1'
   playerHP: 20
   maxPlayerHP: 30
+  playerState: 0
+  rawDeckData: 
   activeCard: {fileID: 0}
+  playerPlatePanel: {fileID: 0}
+  playerDeckPanel: {fileID: 0}
+  playerBenchPanel: {fileID: 0}
+  playerDeckInfo: {fileID: 0}
 --- !u!4 &969343516
 Transform:
   m_ObjectHideFlags: 0
@@ -1649,7 +1659,13 @@ MonoBehaviour:
   playerName: 'Player #2'
   playerHP: 20
   maxPlayerHP: 30
+  playerState: 0
+  rawDeckData: 
   activeCard: {fileID: 0}
+  playerPlatePanel: {fileID: 0}
+  playerDeckPanel: {fileID: 0}
+  playerBenchPanel: {fileID: 0}
+  playerDeckInfo: {fileID: 0}
 --- !u!4 &1015021823
 Transform:
   m_ObjectHideFlags: 0
@@ -2439,8 +2455,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataText: {fileID: 2092529514}
-  IP: 
-  ipInput: {fileID: 1106085831}
 --- !u!81 &2033036399
 AudioListener:
   m_ObjectHideFlags: 0

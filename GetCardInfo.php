@@ -1,11 +1,19 @@
 <?php
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
 
-$database = mysqli_connect('127.0.0.1', 'user', 'password', 'Project', '3306');
+/*$database = mysqli_connect('127.0.0.1', 'user', 'password', 'Project', '3306');
 if ($database->errno != 0)
 {
 	exit(0);
-}
+}*/
+$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 
+$request = array();
+$request['type'] = "getCardInfo";
+
+/*
 //query the shop table
 $query = "select * from Shop";
 $response = $database->query($query);
@@ -44,6 +52,17 @@ while ($row = mysqli_fetch_array($response, MYSQLI_ASSOC))
 	$img = $row['ImageFilepath'];
 	
 	echo $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img . "|". $IDCost[$id] .";";
+}*/
+
+$response = $client->send_request($request);
+
+if ($response['returnCode'] == 0)
+{
+	echo $response['message'];
+}
+else 
+{
+	echo "Error: Something went wrong. Return Code: " . $response['returnCode'] . " Message: " . $response['message'] . PHP_EOL;
 }
 
 ?>

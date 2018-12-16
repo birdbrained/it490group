@@ -339,6 +339,7 @@
     <Compile Include="Assets\Scripts\GrabDataTest.cs" />
     <Compile Include="Assets\Scripts\Launcher.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\RotateUI.cs" />
     <Compile Include="Assets\Scripts\ShopEntry.cs" />
     <Compile Include="Assets\Scripts\UIElementDrag.cs" />
   </ItemGroup>

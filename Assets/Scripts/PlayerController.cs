@@ -12,14 +12,32 @@ public enum PlayerState
     PS_Waiting
 }
 
+public enum Action
+{
+    Action_ERROR,
+    Action_Cook,
+    Action_Attack,
+    Action_Eat
+}
+
 public class PlayerController : MonoBehaviourPun
 {
     [SerializeField][Range(1, 2)]
     private int playerNum = 1;
+    public int PlayerNum
+    {
+        get
+        {
+            return playerNum;
+        }
+    }
     [SerializeField]
     private string playerName = "Player";
     [SerializeField]
     private int playerHP = 20;
+    [SerializeField]
+    private Text playerHPText;
+    private int startingPlayerHP;
     [SerializeField]
     private int maxPlayerHP = 30;
     [SerializeField]
@@ -29,6 +47,22 @@ public class PlayerController : MonoBehaviourPun
         get
         {
             return playerState;
+        }
+        set
+        {
+            playerState = value;
+        }
+    }
+    private Action selectedAction;
+    public Action SelectedAction
+    {
+        get
+        {
+            return selectedAction;
+        }
+        set
+        {
+            selectedAction = value;
         }
     }
 
@@ -45,7 +79,21 @@ public class PlayerController : MonoBehaviourPun
     }
     public Card activeCard;
     private Card cookBaseCard;
+    public Card CookBaseCard
+    {
+        get
+        {
+            return cookBaseCard;
+        }
+    }
     private Card cookSpiceCard;
+    public Card CookSpiceCard
+    {
+        get
+        {
+            return cookSpiceCard;
+        }
+    }
     [SerializeField]
     private GameObject playerPlatePanel;
     public GameObject PlayerPlatePanel
@@ -90,7 +138,9 @@ public class PlayerController : MonoBehaviourPun
     // Use this for initialization
     void Start ()
     {
+        startingPlayerHP = playerHP;
         SetupPlayerDeck();
+        StartCoroutine(GetUsernameFromSession());
         //DoFusion(null, null);
     }
 
@@ -114,6 +164,34 @@ public class PlayerController : MonoBehaviourPun
         if (playerDeckInfo/*[playerNum - 1]*/ != null)
         {
             playerDeckInfo/*[playerNum - 1]*/.text = "Cards left x" + deck.Count.ToString();
+        }
+        if (playerHPText != null)
+        {
+            playerHPText.text = playerHP.ToString();
+            if (playerHP <= startingPlayerHP)
+            {
+                float hp1 = playerHP;
+                float hp2 = startingPlayerHP;
+                float ratio = hp1 / hp2;
+                playerHPText.color = new Color(1.0f, 1.0f * ratio, 1.0f * ratio, 1.0f);
+            }
+            else
+            {
+                playerHPText.color = Color.cyan;
+            }
+        }
+    }
+
+    public IEnumerator GetUsernameFromSession()
+    {
+        string address = "http://10.0.0.34/it490group/GetUsername.php";
+        WWW request = new WWW(address);
+        yield return request;
+        Debug.LogFormat("GetUsernameFromSession: {0}", request.text);
+        if (!string.IsNullOrEmpty(request.text))
+        {
+            playerName = request.text;
+            GameManager.Instance.UserName = playerName;
         }
     }
 
@@ -151,7 +229,8 @@ public class PlayerController : MonoBehaviourPun
             int.Parse(cardInfo[3]),
             int.Parse(cardInfo[4]),
             int.Parse(cardInfo[5]),
-            fuseable
+            fuseable,
+            int.Parse(cardInfo[7])
             );
         _newCard.SetCardOwnership(playerNum);
         return newCard;
@@ -160,7 +239,8 @@ public class PlayerController : MonoBehaviourPun
     private IEnumerator GetFullPlayerDeck()
     {
         //string address = "http://" + GameManager.Instance.GetDatabaseIP() + "/it490group/BuildFullUserDeck.php?username=b&id=0";
-        string address = "https://web.njit.edu/~mwk9/it490group/BuildFullUserDeck.php?username=b&id=0";
+        string address = "http://10.0.0.34/it490group/BuildFullUserDeck.php?username=b&id=0";
+        //string address = "https://web.njit.edu/~mwk9/it490group/BuildFullUserDeck.php?username=b&id=0";
         //TODO: change this ^^^ to take username from PHP
         WWW request = new WWW(address);
         yield return request;
@@ -202,7 +282,8 @@ public class PlayerController : MonoBehaviourPun
                 int.Parse(cardInfo[3]),
                 int.Parse(cardInfo[4]),
                 int.Parse(cardInfo[5]),
-                fuseable
+                fuseable,
+                int.Parse(cardInfo[7])
                 );
             _newCard.SetCardOwnership(playerNum);
             deck.Push(_newCard);
@@ -235,8 +316,19 @@ public class PlayerController : MonoBehaviourPun
     public void PullNextCardFromDeck()
     {
         GameObject newCard = Instantiate(GameManager.Instance.CardObj);
-        Card c = deck.Pop();
+        Card c;
         int i = 0;
+
+        if (deck.Count > 0)
+        {
+            c = deck.Pop();
+        }
+        else
+        {
+            Debug.LogWarning("Warning: no more cards in the Deck for player " + playerNum.ToString());
+            return;
+        }
+
         for (i = 0; i < hand.Length; i++)
         {
             if (hand[i] == null)
@@ -259,6 +351,17 @@ public class PlayerController : MonoBehaviourPun
         newCard.GetComponent<Card>().cardStatus = CardStatus.CS_Hand;
         newCard.GetComponent<Card>().Index = i;
         newCard.transform.SetParent(playerDeckPanel/*[playerNum - 1]*/.transform);
+    }
+
+    public void FillHandWithCards()
+    {
+        for (int i = 0; i < hand.Length; i++)
+        {
+            if (hand[i] == null)
+            {
+                PullNextCardFromDeck();
+            }
+        }
     }
 
     private IEnumerator _DoFusion(string address)
@@ -300,7 +403,8 @@ public class PlayerController : MonoBehaviourPun
             int.Parse(cardInfo[3]),
             int.Parse(cardInfo[4]),
             int.Parse(cardInfo[5]),
-            fuseable
+            fuseable,
+            int.Parse(cardInfo[7])
             );
         _newCard.SetCardOwnership(playerNum);
         //remove the spice from your hand
@@ -330,7 +434,46 @@ public class PlayerController : MonoBehaviourPun
         cookBaseCard.UpdateCard();
         //Destroy(newCard.gameObject);
         cookBaseCard = null;
-        playerState = PlayerState.PS_Selecting; //change to waiting
+        playerState = PlayerState.PS_Waiting; //change to waiting
+        selectedAction = Action.Action_Cook;
+    }
+
+    public void SetAttack()
+    {
+        if (activeCard == null)
+        {
+            Debug.LogWarning("Warning: Cannot attack without an active card!");
+            return;
+        }
+        if (activeCard.CardType == CardType.CT_NULL || activeCard.CardType == CardType.CT_Spice)
+        {
+            Debug.LogWarning("Warning: Incorrect Card Type as active card (how did that happen?!?!)");
+            return;
+        }
+        playerState = PlayerState.PS_Waiting;
+        selectedAction = Action.Action_Attack;
+    }
+
+    public void SetEat()
+    {
+        if (activeCard == null)
+        {
+            Debug.LogWarning("Warning: Cannot eat without an active card!");
+            return;
+        }
+        if (activeCard.CardType == CardType.CT_NULL || activeCard.CardType == CardType.CT_Spice)
+        {
+            Debug.LogWarning("Warning: Incorrect Card Type as active card (how did that happen?!?!)");
+            return;
+        }
+        playerState = PlayerState.PS_Waiting;
+        selectedAction = Action.Action_Eat;
+    }
+
+    public void SetFusion()
+    {
+        playerState = PlayerState.PS_Waiting;
+        selectedAction = Action.Action_Cook;
     }
 
     public void DoFusion(Card Base, Card Spice)
@@ -397,6 +540,17 @@ public class PlayerController : MonoBehaviourPun
             return;
         }
         Debug.LogWarning("The player has an Active Card already, cannot move right now.");
+    }
+
+    public void DestroyActiveCard()
+    {
+        if (activeCard == null)
+        {
+            return;
+        }
+
+        Destroy(activeCard.gameObject);
+        activeCard = null;
     }
 
     public bool SetOutlineStatus(bool active, string type)
@@ -490,8 +644,74 @@ public class PlayerController : MonoBehaviourPun
         {
             cookSpiceCard = card;
             SetOutlineStatus(false, "spice");
-            DoFusion(cookBaseCard, cookSpiceCard);
-            playerState = PlayerState.PS_Waiting;
+            //DoFusion(cookBaseCard, cookSpiceCard);
+            SetFusion();
+            //playerState = PlayerState.PS_Waiting;
+        }
+    }
+
+    public int DeckCount()
+    {
+        return deck.Count;
+    }
+
+    public int HandCount()
+    {
+        int numCards = 0;
+
+        for (int i = 0; i < hand.Length; i++)
+        {
+            if (hand[i] != null)
+            {
+                numCards++;
+            }
+        }
+
+        return numCards;
+    }
+
+    public int BenchCount()
+    {
+        int numCards = 0;
+
+        for (int i = 0; i < bench.Length; i++)
+        {
+            if (hand[i] != null)
+            {
+                numCards++;
+            }
+        }
+
+        return numCards;
+    }
+
+    public int ActiveCardCount()
+    {
+        return (activeCard != null ? 1 : 0);
+    }
+
+    public bool IsPlayerDead()
+    {
+        return playerHP <= 0;
+    }
+
+    public void PlayerTakeDamage(int damageAmount)
+    {
+        if (damageAmount >= 0)
+        {
+            playerHP -= damageAmount;
+        }
+    }
+
+    public void PlayerHeal(int healAmount)
+    {
+        if (healAmount > 0)
+        {
+            playerHP += healAmount;
+            if (playerHP > maxPlayerHP)
+            {
+                playerHP = maxPlayerHP;
+            }
         }
     }
 
@@ -513,5 +733,5 @@ public class PlayerController : MonoBehaviourPun
         return playerBenchPanels[index - 1];
     }*/
 
-    
+
 }
