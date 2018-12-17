@@ -252,12 +252,16 @@ function BuildFullDeck($database, $u, $id)
 	$result['returnCode'] = 0;
 	$result['message'] = "";
 
+	echo "BuildFullUserDeck\n";
 	while ($Row = mysqli_fetch_array($response, MYSQLI_ASSOC))
 	{
+		echo "loop\n";
 		for ($i = 0; $i < 30; $i++)
 		{
+			echo "i $i\n";
 			$cardname = $Row['card' . strval($i)];
-			$stmt = "select * from Cards where name='$cardname';";
+			echo "$cardname\n";
+			$stmt = "select * from Cards where ID='$cardname';";
 			$reponse2 = $database->query($stmt);
 			while ($row = mysqli_fetch_array($reponse2, MYSQLI_ASSOC))
 			{
@@ -272,16 +276,17 @@ function BuildFullDeck($database, $u, $id)
 				$desc = $row['Description'];
 				$img = $row['ImageFilepath'];
 		
+				echo $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img . ";";
 				$result['message'] .= $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img . ";";
 			}
 		}
 	}
 
-	if ($result['message'] == "")
+	/*if ($result['message'] == "")
 	{
 		$result['returnCode'] = 1;
 		$result['message'] = "Could not get data from the database";
-	}
+	}*/
 	return $result;
 }
 
@@ -391,8 +396,11 @@ function requestProcessor($request)
 		$success = true;
 		break;
 	case "cook":
-		ProcessCook(DBi::$mydb, $request);	
+		$arr = array();
+		$arr['returnCode'] = 0;
+		$arr['message'] = ProcessCook(DBi::$mydb, $request);	
 		$success = true;
+		return $arr;
 		break;
 	case "update":
 		$bundleType = $request['bundleType'];

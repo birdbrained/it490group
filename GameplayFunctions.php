@@ -34,7 +34,7 @@ function ProcessCook($database, $request)
 	$t = mysqli_query($database, $s) or die(mysqli_error($database));
 	while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
 		{
-			$product = $row['product'];
+			$product = $row['Name'];
 			break;
 		}
 		$stat = PrintCardStats($database, $product);
@@ -59,8 +59,9 @@ function PrintCardStats($database, $cardname)
 		$hp = $row['HP'];
 		$desc = $row['Description'];
 		$img = $row['ImageFilepath'];
-
+		
 		echo $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img;
+		return $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img;
 	}
 }
 ?>

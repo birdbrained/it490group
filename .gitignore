@@ -6,4 +6,5 @@ Library/
 rpc/
 Temp/
 UnityPackageManager/
+*.sql
 account.php
