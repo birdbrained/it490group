@@ -160,6 +160,72 @@ function addFunds($database, $email, $amount)
 	$t = mysqli_query($database, $stmt);
 }
 
+function PullUserData($database, $username, $type)
+{
+	$t = mysqli_query($db, "select * from Users where username='$username';");
+	$arr = array();
+	$arr['returnCode'] = 0;
+	while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
+	{
+		$arr['message'] = $row[$type];
+		break;
+	}
+	return $arr;
+}
+
+function GetCardInfo($database)
+{
+	//query the shop table
+	$query = "select * from Shop";
+	$response = $database->query($query);
+	$IDCost = array();
+	$ValidID = "";
+	$result = array();
+	$result['returnCode'] = 0;
+	$result['message'] = "":
+
+	while ($row = mysqli_fetch_array($response, MYSQLI_ASSOC))
+	{
+		$IDCost[$row['ID']] = $row['price']; 
+	}
+	//print_r($IDCost);
+
+	//append the where clause 
+	foreach ($IDCost as $key => $value)
+	{
+		$ValidID .= " ID = '$key' or";
+	}
+	//echo $ValidID;
+	//take out the last ' or'
+	$ValidID = substr($ValidID, 0, -3);
+
+	$query = "select * from Cards where". $ValidID . ";";
+	//echo $query;
+	$response = $database->query($query);
+	while ($row = mysqli_fetch_array($response, MYSQLI_ASSOC))
+	{
+		$id = $row['ID'];
+		$name = $row['Name'];
+		$type = $row['Type'];
+		$att = $row['Attack'];
+		$def = $row['Defense'];
+		$val = $row['Value'];
+		$fuse = $row['isFusable'];
+		$hp = $row['HP'];
+		$desc = $row['Description'];
+		$img = $row['ImageFilepath'];
+		
+		$result['message'] .= $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img . "|". $IDCost[$id] .";";
+	}
+	
+	if ($result['message'] == "")
+	{
+		$result['returnCode'] = 1;
+		$result['message'] = "Could not get data from the database";
+	}
+	return $result;
+}
+
 function retreiveFilepath($database, $type)
 {
 	$filepath = "";
@@ -176,6 +242,72 @@ function retreiveFilepath($database, $type)
 	}
 
 	return $filepath;
+}
+
+function BuildFullDeck($database, $u, $id)
+{
+	$query = "select * from UserDeck where username='$u' and deckID='$id';";
+	$response = $database->query($query);
+	$result = array();
+	$result['returnCode'] = 0;
+	$result['message'] = "";
+
+	while ($Row = mysqli_fetch_array($response, MYSQLI_ASSOC))
+	{
+		for ($i = 0; $i < 30; $i++)
+		{
+			$cardname = $Row['card' . strval($i)];
+			$stmt = "select * from Cards where name='$cardname';";
+			$reponse2 = $database->query($stmt);
+			while ($row = mysqli_fetch_array($reponse2, MYSQLI_ASSOC))
+			{
+				$id = $row['ID'];
+				$name = $row['Name'];
+				$type = $row['Type'];
+				$att = $row['Attack'];
+				$def = $row['Defense'];
+				$val = $row['Value'];
+				$fuse = $row['isFusable'];
+				$hp = $row['HP'];
+				$desc = $row['Description'];
+				$img = $row['ImageFilepath'];
+		
+				$result['message'] .= $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img . ";";
+			}
+		}
+	}
+
+	if ($result['message'] == "")
+	{
+		$result['returnCode'] = 1;
+		$result['message'] = "Could not get data from the database";
+	}
+	return $result;
+}
+
+function GetUserDecks($database, $u, $id)
+{
+	$query = "select * from UserDeck where username='$u' and deckID='$id';";
+	$response = $database->query($query);
+	$result = array();
+	$result['returnCode'] = 0;
+	$result['message'] = "";
+	while ($row = mysqli_fetch_array($response, MYSQLI_ASSOC))
+	{
+		//username, deckID, lru, card0, etc...29
+		for ($i = 0; $i < 30; $i++)
+		{
+			$data = $row['card' . strval($i)];
+			$result['message'] .= $data . "|";
+		}
+		$result['message'] = substr($result, 0, -1);
+	}
+	if ($result['message'] == "")
+	{
+		$result['returnCode'] = 1;
+		$result['message'] = "Could not get data from the database";
+	}
+	return $result;
 }
 
 function newBackup($db, $vn, $type, $filepath, $status)
@@ -273,7 +405,6 @@ function requestProcessor($request)
 		$returnArray['message'] = "Server received request and processed";
 		$returnArray['filepath'] = $path;
 		return $returnArray;
-		echo "";
 		break;
 	case "updateBundle":
 		$bundleType = $request['bundleType'];
@@ -293,6 +424,26 @@ function requestProcessor($request)
 		$amount = $request['amount'];
 		addFunds(DBi::$mydb, $request['email'], $amount);
 		$success = true;
+		break;
+	case "pullUserData":
+		$username = $request['username'];
+		$infotype = $request['infoType'];
+		$success = true;
+		return PullUserData(DBi::$mydb, $username, $infotype);
+		break;
+	case "buildFullUserDeck":
+		$u = $request['username'];
+		$id = $request['id'];
+		$success = true;
+		return BuildFullDeck(DBi::$mydb, $u, $id);
+		break;
+	case "getUserDecks":
+		$success = true;
+		return GetUserDecks(DBi::$mydb, $request['username'], $request['id']);
+		break;
+	case "getCardInfo":
+		$success = true;
+		return GetCardInfo(DBi::$mydb);
 		break;
 	}
 	

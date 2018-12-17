@@ -1,17 +1,24 @@
 <?php
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
 //echo "hi\n";
-$database = mysqli_connect('127.0.0.1', 'user', 'password', 'Project', '3306');
+/*$database = mysqli_connect('127.0.0.1', 'user', 'password', 'Project', '3306');
 if ($database->errno != 0)
 {
 	exit(0);
-}
+}*/
+$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 
 //query the shop table
-$u = $_GET['username'];
-$id = $_GET['id'];
+$request = array();
+$request['type'] = "getUserDecks";
+$request['username'] = $_GET['username'];
+$request['id'] = $_GET['id'];
 //echo $u . PHP_EOL;
 //echo $id . PHP_EOL;
-$query = "select * from UserDeck where username='$u' and deckID='$id';";
+
+/*$query = "select * from UserDeck where username='$u' and deckID='$id';";
 $response = $database->query($query);
 $result = "";
 while ($row = mysqli_fetch_array($response, MYSQLI_ASSOC))
@@ -24,6 +31,17 @@ while ($row = mysqli_fetch_array($response, MYSQLI_ASSOC))
 	}
 	$result = substr($result, 0, -1);
 }
-echo $result;
+echo $result;*/
+
+$response = $client->send_request($request);
+
+if ($response['returnCode'] == 0)
+{
+	echo $response['message'];
+}
+else 
+{
+	echo "Error: Something went wrong. Return Code: " . $response['returnCode'] . " Message: " . $response['message'] . PHP_EOL;
+}
 
 ?>
