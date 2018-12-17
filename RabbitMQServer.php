@@ -182,7 +182,7 @@ function GetCardInfo($database)
 	$ValidID = "";
 	$result = array();
 	$result['returnCode'] = 0;
-	$result['message'] = "":
+	$result['message'] = "";
 
 	while ($row = mysqli_fetch_array($response, MYSQLI_ASSOC))
 	{
