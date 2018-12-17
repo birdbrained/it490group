@@ -202,6 +202,95 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: Type
+--- !u!1 &126380776
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 126380777}
+  - component: {fileID: 126380780}
+  - component: {fileID: 126380779}
+  - component: {fileID: 126380778}
+  m_Layer: 5
+  m_Name: TotalMoneyText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &126380777
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 126380776}
+  m_LocalRotation: {x: -0, y: -0, z: 0.08872721, w: 0.996056}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.45474994, y: 0.45474994, z: 0.45475}
+  m_Children: []
+  m_Father: {fileID: 664411643}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 10.181001}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 176, y: -115}
+  m_SizeDelta: {x: 160, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &126380778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 126380776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 3, y: 3}
+  m_UseGraphicAlpha: 1
+--- !u!114 &126380779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 126380776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.10981618, g: 0.8014706, b: 0.053038497, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 8445832d5691fab4e8ff30d37ab85ad8, type: 3}
+    m_FontSize: 55
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 122
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: "Current Money: 500\xA2"
+--- !u!222 &126380780
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 126380776}
 --- !u!1 &253948549
 GameObject:
   m_ObjectHideFlags: 0
@@ -553,6 +642,10 @@ MonoBehaviour:
   attackText: {fileID: 1359471748}
   defenseText: {fileID: 848867921}
   valueText: {fileID: 2106152684}
+  cardOutline: {fileID: 0}
+  cardStatus: 0
+  ownedByPlayer: 1
+  Index: 0
 --- !u!212 &364824655
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -773,6 +866,7 @@ RectTransform:
   m_Children:
   - {fileID: 1734870463}
   - {fileID: 1240006853}
+  - {fileID: 126380777}
   - {fileID: 1271224002}
   - {fileID: 1351357127}
   - {fileID: 1027357996}
@@ -796,6 +890,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4e6311ef7175be4ab03b5a96eb3e5f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  totalMoneyText: {fileID: 126380779}
 --- !u!1 &684181437
 GameObject:
   m_ObjectHideFlags: 0
@@ -1236,7 +1331,7 @@ RectTransform:
   m_Children:
   - {fileID: 455385340}
   m_Father: {fileID: 664411643}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1254,8 +1349,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ca5369a418456c4da4cf8414c420dbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IP: 
-  ipInput: {fileID: 1271223999}
 --- !u!114 &1027357998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1661,7 +1754,7 @@ RectTransform:
   - {fileID: 1351949355}
   - {fileID: 684181440}
   m_Father: {fileID: 664411643}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1699,7 +1792,7 @@ RectTransform:
   - {fileID: 840501982}
   - {fileID: 2135021281}
   m_Father: {fileID: 664411643}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1833,7 +1926,7 @@ RectTransform:
   m_Children:
   - {fileID: 332273151}
   m_Father: {fileID: 664411643}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1851,8 +1944,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ca5369a418456c4da4cf8414c420dbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IP: 
-  ipInput: {fileID: 1271223999}
 --- !u!114 &1351357129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2130,14 +2221,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1: {fileID: 0}
   player2: {fileID: 0}
-  dbIP: 0.0.0.0
-  ipInput: {fileID: 0}
-  brokerIPInput: {fileID: 1308819943}
   userName: b
   shopPanel: {fileID: 1734870462}
   shopEntryPrefab: {fileID: 1062907732147604, guid: 1964026313bfede42a338cdb3d09ee85,
     type: 2}
+  cardObj: {fileID: 0}
   resultText: {fileID: 0}
+  totalMoney: 0
+  totalMoneyTexts: []
 --- !u!4 &1416993790
 Transform:
   m_ObjectHideFlags: 0

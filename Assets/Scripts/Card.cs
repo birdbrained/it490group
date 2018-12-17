@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -21,7 +22,7 @@ public enum CardStatus
     CS_Active
 }
 
-public class Card : MonoBehaviour, IPointerClickHandler
+public class Card : MonoBehaviour, IPointerClickHandler, IPunObservable
 {
     [SerializeField]
     private int ID = 0;
@@ -51,8 +52,22 @@ public class Card : MonoBehaviour, IPointerClickHandler
     private Sprite imageSprite;
     [SerializeField]
     private int attackAmount = 0;
+    public int AttackAmount
+    {
+        get
+        {
+            return attackAmount;
+        }
+    }
     [SerializeField]
     private int defenseAmount = 0;
+    public int DefenseAmount
+    {
+        get
+        {
+            return defenseAmount;
+        }
+    }
     [SerializeField]
     private int value = 0;
     public int CardValue
@@ -69,6 +84,19 @@ public class Card : MonoBehaviour, IPointerClickHandler
         get
         {
             return isFusable;
+        }
+    }
+    [SerializeField]
+    private int cardHP;
+    public int CardHP
+    {
+        get
+        {
+            return cardHP;
+        }
+        set
+        {
+            cardHP = value;
         }
     }
 
@@ -99,12 +127,13 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public CardStatus cardStatus;
     public int ownedByPlayer = 1;
+    //private PlayerController player;
     public int Index = 0;
 
 	// Use this for initialization
 	void Start ()
     {
-        UpdateCard();
+        
 	}
 
     public void UpdateCard()
@@ -148,9 +177,50 @@ public class Card : MonoBehaviour, IPointerClickHandler
     }
 	
 	// Update is called once per frame
-	void Update () {
-		
+	void Update ()
+    {
+        UpdateCard();
+        UpdateParent();
 	}
+
+    public void UpdateParent()
+    {
+        switch (cardStatus)
+        {
+            case CardStatus.CS_Active:
+                if (ownedByPlayer == 1)
+                {
+                    transform.SetParent(PlayerUIData.Instance.player1PlatePanel.transform);
+                }
+                else
+                {
+                    transform.SetParent(PlayerUIData.Instance.player2PlatePanel.transform);
+                }
+                break;
+            case CardStatus.CS_Hand:
+                if (ownedByPlayer == 1)
+                {
+                    transform.SetParent(PlayerUIData.Instance.player1DeckPanel.transform);
+                }
+                else
+                {
+                    transform.SetParent(PlayerUIData.Instance.player2DeckPanel.transform);
+                }
+                break;
+            case CardStatus.CS_Bench:
+                if (ownedByPlayer == 1)
+                {
+                    transform.SetParent(PlayerUIData.Instance.player1BenchPanel.transform);
+                }
+                else
+                {
+                    transform.SetParent(PlayerUIData.Instance.player2BenchPanel.transform);
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     public void UpdateImage()
     {
@@ -172,7 +242,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public void SetupCard(int id, string name, string description, CardType type, string imgFilepath, int attack, int defense, int val, bool fusable)
+    public void SetupCard(int id, string name, string description, CardType type, string imgFilepath, int attack, int defense, int val, bool fusable, int hp)
     {
         ID = id;
         cardName = name;
@@ -183,6 +253,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         defenseAmount = defense;
         value = val;
         isFusable = fusable;
+        cardHP = hp;
         cardStatus = CardStatus.CS_Deck;
     }
 
@@ -197,7 +268,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
         defenseAmount = card.defenseAmount;
         value = card.value;
         isFusable = card.isFusable;
+        cardHP = card.cardHP;
         cardStatus = CardStatus.CS_Deck;
+        ownedByPlayer = card.ownedByPlayer;
     }
 
     public void SetCardOwnership(int playerNum)
@@ -207,11 +280,35 @@ public class Card : MonoBehaviour, IPointerClickHandler
             return;
         }
         ownedByPlayer = playerNum;
+        /*if (ownedByPlayer == 1)
+        {
+            player = GameManager.Instance.Player1;
+            //gameObject.transform.SetParent(GameManager.Instance.Player1.GetPlayerBenchPanel(ownedByPlayer).transform);
+        }
+        else
+        {
+            player = GameManager.Instance.Player2;
+            //gameObject.transform.SetParent(GameManager.Instance.Player2.GetPlayerBenchPanel(ownedByPlayer).transform);
+        }*/
     }
 
     public int GetCardID()
     {
         return ID;
+    }
+
+    public void CardTakeDamage(int damageAmount)
+    {
+        cardHP -= damageAmount;
+        if (cardHP <= 0)
+        {
+            //destroy the card
+        }
+    }
+
+    public bool IsCardDead()
+    {
+        return cardHP <= 0;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -284,8 +381,39 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    /*public void Drag()
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        transform.position = Input.mousePosition;
-    }*/
+        if (stream.IsWriting)
+        {
+            stream.SendNext(ID);
+            stream.SendNext(cardName);
+            stream.SendNext(cardDescription);
+            stream.SendNext(cardType);
+            stream.SendNext(imageFilepath);
+            stream.SendNext(attackAmount);
+            stream.SendNext(defenseAmount);
+            stream.SendNext(value);
+            stream.SendNext(isFusable);
+            stream.SendNext(cardHP);
+            stream.SendNext(cardStatus);
+            stream.SendNext(ownedByPlayer);
+            stream.SendNext(Index);
+        }
+        else
+        {
+            ID = (int)stream.ReceiveNext();
+            cardName = (string)stream.ReceiveNext();
+            cardDescription = (string)stream.ReceiveNext();
+            cardType = (CardType)stream.ReceiveNext();
+            imageFilepath = (string)stream.ReceiveNext();
+            attackAmount = (int)stream.ReceiveNext();
+            defenseAmount = (int)stream.ReceiveNext();
+            value = (int)stream.ReceiveNext();
+            isFusable = (bool)stream.ReceiveNext();
+            cardHP = (int)stream.ReceiveNext();
+            cardStatus = (CardStatus)stream.ReceiveNext();
+            ownedByPlayer = (int)stream.ReceiveNext();
+            Index = (int)stream.ReceiveNext();
+        }
+    }
 }

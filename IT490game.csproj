@@ -335,11 +335,16 @@
     <Compile Include="Assets\Scripts\ButtonLogic.cs" />
     <Compile Include="Assets\Scripts\Card.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\GetUsername.cs" />
     <Compile Include="Assets\Scripts\GrabDataFromTable.cs" />
     <Compile Include="Assets\Scripts\GrabDataTest.cs" />
     <Compile Include="Assets\Scripts\Launcher.cs" />
+    <Compile Include="Assets\Scripts\LocalUserData.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\PlayerUIData.cs" />
+    <Compile Include="Assets\Scripts\RotateUI.cs" />
     <Compile Include="Assets\Scripts\ShopEntry.cs" />
+    <Compile Include="Assets\Scripts\SpinningCardThing.cs" />
     <Compile Include="Assets\Scripts\UIElementDrag.cs" />
   </ItemGroup>
   <ItemGroup>

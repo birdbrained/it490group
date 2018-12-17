@@ -7,10 +7,10 @@ public class GrabDataFromTable : MonoBehaviour
 {
     private string data = "";
     private string[] items;
-    [SerializeField]
+    /*[SerializeField]
     private string IP;
     [SerializeField]
-    private InputField ipInput;
+    private InputField ipInput;*/
 
 	// Use this for initialization
 	void Start () {
@@ -29,8 +29,9 @@ public class GrabDataFromTable : MonoBehaviour
 
     private IEnumerator _GetDataFromCardsTable()
     {
-        string address = "http://" + ipInput.text + "/it490group/GetCardInfo.php";
-        GameManager.Instance.SetDatabaseIP(ipInput.text);
+        //string address = "http://" + ipInput.text + "/it490group/GetCardInfo.php";
+        string address = "http://10.0.0.34/it490group/GetCardInfo.php";
+        //GameManager.Instance.SetDatabaseIP(ipInput.text);
         Debug.Log(address);
         WWW request = new WWW(address);
         yield return request;
@@ -46,8 +47,9 @@ public class GrabDataFromTable : MonoBehaviour
 
     private IEnumerator _UserDeck()
     {
-        string address = "http://" + ipInput.text + "/it490group/GetUserDecks.php?username=" + GameManager.Instance.GetUsername() + "&id=0";
-        GameManager.Instance.SetDatabaseIP(ipInput.text);
+        //string address = "http://" + ipInput.text + "/it490group/GetUserDecks.php?username=" + GameManager.Instance.GetUsername() + "&id=0";
+        string address = "http://10.0.0.34/it490group/GetUserDecks.php?username=" + GameManager.Instance.GetUsername() + "&id=0";
+        //GameManager.Instance.SetDatabaseIP(ipInput.text);
         Debug.Log(address);
         WWW request = new WWW(address);
         yield return request;
