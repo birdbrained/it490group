@@ -88,6 +88,17 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPunObservable
     }
     [SerializeField]
     private int cardHP;
+    public int CardHP
+    {
+        get
+        {
+            return cardHP;
+        }
+        set
+        {
+            cardHP = value;
+        }
+    }
 
     //ui stuff
     [SerializeField]

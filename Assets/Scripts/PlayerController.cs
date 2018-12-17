@@ -101,6 +101,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             return hand;
         }
     }
+    private bool[] handBools = new bool[5];
     public Card activeCard;
     private Card cookBaseCard;
     public Card CookBaseCard
@@ -435,18 +436,20 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             return;
         }
         c.SetCardOwnership(playerNum);
-        for (i = 0; i < hand.Length; i++)
+        for (i = 0; i < handBools.Length; i++)
         {
-            if (hand[i] == null)
+            //if (hand[i] == null)
+            if (handBools[i] == false)
             {
                 Debug.Log("Pull next card from deck: Is c null? " + (c == null).ToString());
                 hand[i] = c;
+                handBools[i] = true;
                 c.cardStatus = CardStatus.CS_Hand;
                 c.Index = i;
                 break;
             }
         }
-        if (i >= hand.Length)
+        if (i >= handBools.Length)
         {
             //something went wrong, pulled card when hand was full
             deck.Push(c);
@@ -467,9 +470,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             return;
         }
 
-        for (int i = 0; i < hand.Length; i++)
+        for (int i = 0; i < handBools.Length; i++)
         {
-            if (hand[i] == null)
+            //if (hand[i] == null)
+            if (handBools[i] == false)
             {
                 PullNextCardFromDeck();
             }
@@ -525,7 +529,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             );
         _newCard.SetCardOwnership(playerNum);
         //remove the spice from your hand
-        hand[cookSpiceCard.Index] = null;
+        //hand[cookSpiceCard.Index] = null;
+        handBools[cookSpiceCard.Index] = false;
         PhotonNetwork.Destroy(cookSpiceCard.gameObject);
         cookSpiceCard = null;
         //replace the base card with the new fusion
@@ -554,8 +559,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         cookBaseCard.UpdateCard();
         //PhotonNetwork.Destroy(newCard.gameObject);
         cookBaseCard = null;
-        playerState = PlayerState.PS_Waiting; //change to waiting
-        selectedAction = Action.Action_Cook;
+        //playerState = PlayerState.PS_Waiting; //change to waiting
+        //selectedAction = Action.Action_Cook;
     }
 
     public void SetAttack()
@@ -667,7 +672,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             if (bench[i] == null)
             {
                 bench[i] = card;
-                hand[index] = null;
+                //hand[index] = null;
+                handBools[index] = false;
                 card.Index = i;
                 card.gameObject.transform.SetParent(playerBenchPanel.transform);
                 card.cardStatus = CardStatus.CS_Bench;
@@ -751,10 +757,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         }
         else if (type == "spice")
         {
-            //Debug.Log("It's a spice!");
+            Debug.Log("It's a spice!");
             foreach (Card card in hand)
+            //for (int i = 0; i < handBools.Length; i++)
             {
-                //Debug.Log(card == null);
+                Debug.Log(card == null);
                 if (card != null)
                 {
                     if (card.IsFusable/* && card.CardType == CardType.CT_Spice*/)
@@ -842,9 +849,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         int numCards = 0;
 
-        for (int i = 0; i < hand.Length; i++)
+        for (int i = 0; i < handBools.Length; i++)
         {
-            if (hand[i] != null)
+            if (handBools[i] != false)
             {
                 numCards++;
             }
@@ -859,7 +866,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         for (int i = 0; i < bench.Length; i++)
         {
-            if (hand[i] != null)
+            if (handBools[i] != false)
             {
                 numCards++;
             }
@@ -953,6 +960,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             //stream.SendNext(playerBenchPanel);
             //stream.SendNext(playerDeckInfo);
             stream.SendNext(deckFinishedBuilding);
+
+            for (int i = 0; i < handBools.Length; i++)
+            {
+                stream.SendNext(handBools[i]);
+            }
         }
         else
         {
@@ -977,6 +989,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             //playerBenchPanel = (GameObject)stream.ReceiveNext();
             //playerDeckInfo = (Text)stream.ReceiveNext();
             deckFinishedBuilding = (bool)stream.ReceiveNext();
+
+            for (int i = 0; i < handBools.Length; i++)
+            {
+                handBools[i] = (bool)stream.ReceiveNext();
+            }
         }
     }
 

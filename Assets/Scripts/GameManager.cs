@@ -100,6 +100,11 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField]
     private Text[] totalMoneyTexts;
     private bool playerCreated = false;
+    private bool turnExecuting = false;
+    [SerializeField]
+    private Text player1HealthText;
+    [SerializeField]
+    private Text player2HealthText;
 
 	// Use this for initialization
 	void Start ()
@@ -162,34 +167,34 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
                 }
             }
 
-            if (player1.PlayerHPText != null)
+            if (player1HealthText != null)
             {
-                player1.PlayerHPText.text = player1.PlayerHP.ToString();
+                player1HealthText.text = player1.PlayerHP.ToString();
                 if (player1.PlayerHP <= player1.StartingPlayerHP)
                 {
                     float hp1 = player1.PlayerHP;
                     float hp2 = player1.StartingPlayerHP;
                     float ratio = hp1 / hp2;
-                    player1.PlayerHPText.color = new Color(1.0f, 1.0f * ratio, 1.0f * ratio, 1.0f);
+                    player1HealthText.color = new Color(1.0f, 1.0f * ratio, 1.0f * ratio, 1.0f);
                 }
                 else
                 {
-                    player1.PlayerHPText.color = Color.cyan;
+                    player1HealthText.color = Color.cyan;
                 }
             }
-            if (player2.PlayerHPText != null)
+            if (player2HealthText != null)
             {
-                player2.PlayerHPText.text = player2.PlayerHP.ToString();
+                player2HealthText.text = player2.PlayerHP.ToString();
                 if (player2.PlayerHP <= player2.StartingPlayerHP)
                 {
                     float hp1 = player2.PlayerHP;
                     float hp2 = player2.StartingPlayerHP;
                     float ratio = hp1 / hp2;
-                    player2.PlayerHPText.color = new Color(1.0f, 1.0f * ratio, 1.0f * ratio, 1.0f);
+                    player2HealthText.color = new Color(1.0f, 1.0f * ratio, 1.0f * ratio, 1.0f);
                 }
                 else
                 {
-                    player2.PlayerHPText.color = Color.cyan;
+                    player2HealthText.color = Color.cyan;
                 }
             }
         }
@@ -263,8 +268,79 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         PhotonNetwork.LoadLevel("Room" + PhotonNetwork.CurrentRoom.PlayerCount);
     }
 
+    private IEnumerator JustHangOnASecond(float time, Card player1ActiveCard, Card player2ActiveCard)
+    {
+        yield return new WaitForSeconds(time);
+
+        Debug.Log("updating statuses");
+        player1.UpdatePlayerState(PlayerState.PS_Selecting);
+        player1.UpdatePlayerAciton(Action.Action_ERROR);
+        player2.UpdatePlayerState(PlayerState.PS_Selecting);
+        player2.UpdatePlayerAciton(Action.Action_ERROR);
+
+        //then check to see if the active card has died
+        //if (player1.activeCard.IsCardDead())
+        if (player1ActiveCard.IsCardDead())
+        {
+            player1.DestroyActiveCard();
+        }
+        //if (player2.activeCard.IsCardDead())
+        if (player2ActiveCard.IsCardDead())
+        {
+            player2.DestroyActiveCard();
+        }
+        //and then fill hand with cards
+        player1.FillHandWithCards();
+        player2.FillHandWithCards();
+
+        //check if a player has won
+        //...because they have no more cards left?
+        if (IsPlayerOutOfCards(player1))
+        {
+            winnerIDNum = 2;
+        }
+        if (IsPlayerOutOfCards(player2))
+        {
+            if (winnerIDNum == 2)
+            {
+                //both players are out of cards somehow
+                //3 is the id for a draw
+                winnerIDNum = 3;
+            }
+            else
+            {
+                winnerIDNum = 1;
+            }
+        }
+        //...because a player is dead?
+        if (player1.IsPlayerDead())
+        {
+            winnerIDNum = 2;
+        }
+        if (player2.IsPlayerDead())
+        {
+            if (winnerIDNum == 2)
+            {
+                //both players are out of cards somehow
+                //3 is the id for a draw
+                winnerIDNum = 3;
+            }
+            else
+            {
+                winnerIDNum = 1;
+            }
+        }
+
+        turnExecuting = false;
+    }
+
     public void ExecuteTurn()
     {
+        if (turnExecuting)
+        {
+            Debug.Log("Turn already executing.");
+            return;
+        }
         Debug.Log("Executing turn...");
         Card player1ActiveCard = PlayerUIData.Instance.player1PlatePanel.gameObject.GetComponentInChildren<Card>();
         Card player2ActiveCard = PlayerUIData.Instance.player2PlatePanel.gameObject.GetComponentInChildren<Card>();
@@ -338,12 +414,14 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
             //int healAmount = player1.activeCard.CardValue;
             int healAmount = player1ActiveCard.CardValue;
             player1.PlayerHeal(healAmount);
+            player1ActiveCard.CardHP = 0;
         }
         if (player2.SelectedAction == Action.Action_Eat)
         {
             //int healAmount = player2.activeCard.CardValue;
             int healAmount = player2ActiveCard.CardValue;
             player2.PlayerHeal(healAmount);
+            player2ActiveCard.CardHP = 0;
         }
 
         //turn is over, reset flags for each player
@@ -352,64 +430,11 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
         //player1.SelectedAction = Action.Action_ERROR;
         //player2.CurrPlayerState = PlayerState.PS_Selecting;
         //player2.SelectedAction = Action.Action_ERROR;
-        Debug.Log("updating statuses");
-        player1.UpdatePlayerState(PlayerState.PS_Selecting);
-        player1.UpdatePlayerAciton(Action.Action_ERROR);
-        player2.UpdatePlayerState(PlayerState.PS_Selecting);
-        player2.UpdatePlayerAciton(Action.Action_ERROR);
-        
-        //then check to see if the active card has died
-        //if (player1.activeCard.IsCardDead())
-        if (player1ActiveCard.IsCardDead())
-        {
-            player1.DestroyActiveCard();
-        }
-        //if (player2.activeCard.IsCardDead())
-        if (player2ActiveCard.IsCardDead())
-        {
-            player2.DestroyActiveCard();
-        }
-        //and then fill hand with cards
-        player1.FillHandWithCards();
-        player2.FillHandWithCards();
 
-        //check if a player has won
-        //...because they have no more cards left?
-        if (IsPlayerOutOfCards(player1))
-        {
-            winnerIDNum = 2;
-        }
-        if (IsPlayerOutOfCards(player2))
-        {
-            if (winnerIDNum == 2)
-            {
-                //both players are out of cards somehow
-                //3 is the id for a draw
-                winnerIDNum = 3;
-            }
-            else
-            {
-                winnerIDNum = 1;
-            }
-        }
-        //...because a player is dead?
-        if (player1.IsPlayerDead())
-        {
-            winnerIDNum = 2;
-        }
-        if (player2.IsPlayerDead())
-        {
-            if (winnerIDNum == 2)
-            {
-                //both players are out of cards somehow
-                //3 is the id for a draw
-                winnerIDNum = 3;
-            }
-            else
-            {
-                winnerIDNum = 1;
-            }
-        }
+        turnExecuting = true;
+        StartCoroutine(JustHangOnASecond(0.5f, player1ActiveCard, player2ActiveCard));
+
+        
     }
 
     public bool IsPlayerOutOfCards(PlayerController player)
