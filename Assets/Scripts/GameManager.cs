@@ -14,7 +14,7 @@ public enum TurnType
     TT_Eat
 };
 
-public class GameManager : MonoBehaviourPunCallbacks
+public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     private static GameManager instance;
     public static GameManager Instance
@@ -46,6 +46,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             return player2;
         }
     }
+    [SerializeField]
+    private GameObject playerPrefab;
     [SerializeField]
     private int winnerIDNum = 0;
     /*[SerializeField]
@@ -97,11 +99,59 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     [SerializeField]
     private Text[] totalMoneyTexts;
+    private bool playerCreated = false;
+    private bool turnExecuting = false;
+    [SerializeField]
+    private Text player1HealthText;
+    [SerializeField]
+    private Text player2HealthText;
 
 	// Use this for initialization
 	void Start ()
     {
         winnerIDNum = 0;
+        if (playerPrefab != null)
+        {
+            if (playerCreated == false)
+            {
+                GameObject play = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0);
+                int playerID = 0;
+                if (LocalUserData.Instance.UserName == "b")
+                {
+                    playerID = 1;
+                }
+                else
+                {
+                    playerID = 2;
+                }
+                Debug.Log("Photon View ID: " + playerID.ToString());
+                if (playerID == 1)
+                {
+                    play.GetComponent<PlayerController>().SetupPlayer(
+                        1,
+                        PlayerUIData.Instance.player1HPText,
+                        PlayerUIData.Instance.player1PlatePanel,
+                        PlayerUIData.Instance.player1DeckPanel,
+                        PlayerUIData.Instance.player1BenchPanel,
+                        PlayerUIData.Instance.player1DeckInfo
+                        );
+                    player1 = play.GetComponent<PlayerController>();
+                }
+                else
+                {
+                    play.GetComponent<PlayerController>().SetupPlayer(
+                        2,
+                        PlayerUIData.Instance.player2HPText,
+                        PlayerUIData.Instance.player2PlatePanel,
+                        PlayerUIData.Instance.player2DeckPanel,
+                        PlayerUIData.Instance.player2BenchPanel,
+                        PlayerUIData.Instance.player2DeckInfo
+                        );
+                    player2 = play.GetComponent<PlayerController>();
+                }
+                playerCreated = true;
+            }
+        }
 	}
 	
 	// Update is called once per frame
@@ -114,6 +164,52 @@ public class GameManager : MonoBehaviourPunCallbacks
                 if (player1.SelectedAction != Action.Action_ERROR && player2.SelectedAction != Action.Action_ERROR)
                 {
                     ExecuteTurn();
+                }
+            }
+
+            if (player1HealthText != null)
+            {
+                player1HealthText.text = player1.PlayerHP.ToString();
+                if (player1.PlayerHP <= player1.StartingPlayerHP)
+                {
+                    float hp1 = player1.PlayerHP;
+                    float hp2 = player1.StartingPlayerHP;
+                    float ratio = hp1 / hp2;
+                    player1HealthText.color = new Color(1.0f, 1.0f * ratio, 1.0f * ratio, 1.0f);
+                }
+                else
+                {
+                    player1HealthText.color = Color.cyan;
+                }
+            }
+            if (player2HealthText != null)
+            {
+                player2HealthText.text = player2.PlayerHP.ToString();
+                if (player2.PlayerHP <= player2.StartingPlayerHP)
+                {
+                    float hp1 = player2.PlayerHP;
+                    float hp2 = player2.StartingPlayerHP;
+                    float ratio = hp1 / hp2;
+                    player2HealthText.color = new Color(1.0f, 1.0f * ratio, 1.0f * ratio, 1.0f);
+                }
+                else
+                {
+                    player2HealthText.color = Color.cyan;
+                }
+            }
+        }
+        else
+        {
+            PlayerController[] list = FindObjectsOfType<PlayerController>();
+            foreach (PlayerController pc in list)
+            {
+                if (pc.PlayerNum == 1)
+                {
+                    player1 = pc;
+                }
+                else if (pc.PlayerNum == 2)
+                {
+                    player2 = pc;
                 }
             }
         }
@@ -172,68 +268,24 @@ public class GameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel("Room" + PhotonNetwork.CurrentRoom.PlayerCount);
     }
 
-    public void ExecuteTurn()
+    private IEnumerator JustHangOnASecond(float time, Card player1ActiveCard, Card player2ActiveCard)
     {
-        Debug.Log("Executing turn...");
+        yield return new WaitForSeconds(time);
 
-        //cook first
-        if (player1.SelectedAction == Action.Action_Cook)
-        {
-            player1.DoFusion(player1.CookBaseCard, player1.CookSpiceCard);
-        }
-        if (player2.SelectedAction == Action.Action_Cook)
-        {
-            player2.DoFusion(player2.CookBaseCard, player2.CookSpiceCard);
-        }
+        Debug.Log("updating statuses");
+        player1.UpdatePlayerState(PlayerState.PS_Selecting);
+        player1.UpdatePlayerAciton(Action.Action_ERROR);
+        player2.UpdatePlayerState(PlayerState.PS_Selecting);
+        player2.UpdatePlayerAciton(Action.Action_ERROR);
 
-        //attack second
-        if (player1.SelectedAction == Action.Action_Attack)
-        {
-            //attack player 2's active card
-            int attackNum = player1.activeCard.AttackAmount;
-            int defenseNum = player2.activeCard.DefenseAmount;
-            int damage = attackNum - defenseNum;
-            player2.activeCard.CardTakeDamage(1);
-            if (player2.activeCard.IsCardDead() && damage > 0)
-            {
-                player2.PlayerTakeDamage(damage);
-            }
-        }
-        if (player2.SelectedAction == Action.Action_Attack)
-        {
-            int attackNum = player2.activeCard.AttackAmount;
-            int defenseNum = player1.activeCard.DefenseAmount;
-            int damage = attackNum - defenseNum;
-            player1.activeCard.CardTakeDamage(1);
-            if (player1.activeCard.IsCardDead() && damage > 0)
-            {
-                player1.PlayerTakeDamage(damage);
-            }
-        }
-
-        //eat last
-        if (player1.SelectedAction == Action.Action_Eat)
-        {
-            int healAmount = player1.activeCard.CardValue;
-            player1.PlayerHeal(healAmount);
-        }
-        if (player2.SelectedAction == Action.Action_Eat)
-        {
-            int healAmount = player2.activeCard.CardValue;
-            player2.PlayerHeal(healAmount);
-        }
-
-        //turn is over, reset flags for each player
-        player1.CurrPlayerState = PlayerState.PS_Selecting;
-        player1.SelectedAction = Action.Action_ERROR;
-        player2.CurrPlayerState = PlayerState.PS_Selecting;
-        player2.SelectedAction = Action.Action_ERROR;
         //then check to see if the active card has died
-        if (player1.activeCard.IsCardDead())
+        //if (player1.activeCard.IsCardDead())
+        if (player1ActiveCard.IsCardDead())
         {
             player1.DestroyActiveCard();
         }
-        if (player2.activeCard.IsCardDead())
+        //if (player2.activeCard.IsCardDead())
+        if (player2ActiveCard.IsCardDead())
         {
             player2.DestroyActiveCard();
         }
@@ -278,6 +330,111 @@ public class GameManager : MonoBehaviourPunCallbacks
                 winnerIDNum = 1;
             }
         }
+
+        turnExecuting = false;
+    }
+
+    public void ExecuteTurn()
+    {
+        if (turnExecuting)
+        {
+            Debug.Log("Turn already executing.");
+            return;
+        }
+        Debug.Log("Executing turn...");
+        Card player1ActiveCard = PlayerUIData.Instance.player1PlatePanel.gameObject.GetComponentInChildren<Card>();
+        Card player2ActiveCard = PlayerUIData.Instance.player2PlatePanel.gameObject.GetComponentInChildren<Card>();
+
+        if (player1ActiveCard == null || player2ActiveCard == null)
+        {
+            Debug.LogWarning("Warning! One of the active cards is null...restting appropriate flags.");
+            if (player1ActiveCard == null)
+            {
+                //player1.CurrPlayerState = PlayerState.PS_Selecting;
+                //player1.SelectedAction = Action.Action_ERROR;
+                player1.UpdatePlayerState(PlayerState.PS_Selecting);
+                player1.UpdatePlayerAciton(Action.Action_ERROR);
+            }
+            if (player2ActiveCard == null)
+            {
+                //player2.CurrPlayerState = PlayerState.PS_Selecting;
+                //player2.SelectedAction = Action.Action_ERROR;
+                player2.UpdatePlayerState(PlayerState.PS_Selecting);
+                player2.UpdatePlayerAciton(Action.Action_ERROR);
+            }
+            return;
+        }
+
+        //cook first
+        if (player1.SelectedAction == Action.Action_Cook)
+        {
+            player1.DoFusion(player1.CookBaseCard, player1.CookSpiceCard);
+        }
+        if (player2.SelectedAction == Action.Action_Cook)
+        {
+            player2.DoFusion(player2.CookBaseCard, player2.CookSpiceCard);
+        }
+
+        //attack second
+        if (player1.SelectedAction == Action.Action_Attack)
+        {
+            //attack player 2's active card
+            //int attackNum = player1.activeCard.AttackAmount;
+            //int defenseNum = player2.activeCard.DefenseAmount;
+            int attackNum = player1ActiveCard.AttackAmount;
+            int defenseNum = player2ActiveCard.DefenseAmount;
+            int damage = attackNum - defenseNum;
+            //player2.activeCard.CardTakeDamage(1);
+            player2ActiveCard.CardTakeDamage(1);
+            //if (player2.activeCard.IsCardDead() && damage > 0)
+            if (player2ActiveCard.IsCardDead() && damage > 0)
+            {
+                player2.PlayerTakeDamage(damage);
+            }
+        }
+        if (player2.SelectedAction == Action.Action_Attack)
+        {
+            //int attackNum = player2.activeCard.AttackAmount;
+            //int defenseNum = player1.activeCard.DefenseAmount;
+            int attackNum = player2ActiveCard.AttackAmount;
+            int defenseNum = player1ActiveCard.DefenseAmount;
+            int damage = attackNum - defenseNum;
+            //player1.activeCard.CardTakeDamage(1);
+            player1ActiveCard.CardTakeDamage(1);
+            //if (player1.activeCard.IsCardDead() && damage > 0)
+            if (player1ActiveCard.IsCardDead() && damage > 0)
+            {
+                player1.PlayerTakeDamage(damage);
+            }
+        }
+
+        //eat last
+        if (player1.SelectedAction == Action.Action_Eat)
+        {
+            //int healAmount = player1.activeCard.CardValue;
+            int healAmount = player1ActiveCard.CardValue;
+            player1.PlayerHeal(healAmount);
+            player1ActiveCard.CardHP = 0;
+        }
+        if (player2.SelectedAction == Action.Action_Eat)
+        {
+            //int healAmount = player2.activeCard.CardValue;
+            int healAmount = player2ActiveCard.CardValue;
+            player2.PlayerHeal(healAmount);
+            player2ActiveCard.CardHP = 0;
+        }
+
+        //turn is over, reset flags for each player
+
+        //player1.CurrPlayerState = PlayerState.PS_Selecting;
+        //player1.SelectedAction = Action.Action_ERROR;
+        //player2.CurrPlayerState = PlayerState.PS_Selecting;
+        //player2.SelectedAction = Action.Action_ERROR;
+
+        turnExecuting = true;
+        StartCoroutine(JustHangOnASecond(0.5f, player1ActiveCard, player2ActiveCard));
+
+        
     }
 
     public bool IsPlayerOutOfCards(PlayerController player)
@@ -459,6 +616,56 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient);
             LoadArena();
+        }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            //stream.SendNext(player1);
+            //stream.SendNext(player2);
+        }
+        else
+        {
+            //player1 = (PlayerController)stream.ReceiveNext();
+            //player2 = (PlayerController)stream.ReceiveNext();
+        }
+    }
+
+    public void PlayerCook(int playerNumber)
+    {
+        if (playerNumber == 1)
+        {
+            player1.StartCook();
+        }
+        else
+        {
+            player2.StartCook();
+        }
+    }
+
+    public void PlayerAttack(int playerNumber)
+    {
+        if (playerNumber == 1)
+        {
+            player1.SetAttack();
+        }
+        else
+        {
+            player2.SetAttack();
+        }
+    }
+
+    public void PlayerEat(int playerNumber)
+    {
+        if (playerNumber == 1)
+        {
+            player1.SetEat();
+        }
+        else
+        {
+            player2.SetEat();
         }
     }
 }
