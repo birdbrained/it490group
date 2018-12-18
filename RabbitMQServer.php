@@ -162,7 +162,7 @@ function addFunds($database, $email, $amount)
 
 function PullUserData($database, $username, $type)
 {
-	$t = mysqli_query($db, "select * from Users where username='$username';");
+	$t = mysqli_query($database, "select * from Users where username='$username';");
 	$arr = array();
 	$arr['returnCode'] = 0;
 	while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
@@ -223,6 +223,7 @@ function GetCardInfo($database)
 		$result['returnCode'] = 1;
 		$result['message'] = "Could not get data from the database";
 	}
+	echo $result['message'] . PHP_EOL;
 	return $result;
 }
 
@@ -305,7 +306,7 @@ function GetUserDecks($database, $u, $id)
 			$data = $row['card' . strval($i)];
 			$result['message'] .= $data . "|";
 		}
-		$result['message'] = substr($result, 0, -1);
+		$result['message'] = substr($result['message'], 0, -1);
 	}
 	if ($result['message'] == "")
 	{
