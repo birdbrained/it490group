@@ -635,6 +635,7 @@ MonoBehaviour:
   defenseAmount: 2
   value: 2
   isFusable: 1
+  cardHP: 0
   nameText: {fileID: 338140630}
   typeText: {fileID: 93422847}
   cardImage: {fileID: 0}
@@ -1644,7 +1645,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1271223999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1778,7 +1779,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1308819942
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1985,6 +1986,17 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1351357128}
         m_MethodName: GetDataFromCardsTable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1416993789}
+        m_MethodName: UpdateTotalMoney
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2221,6 +2233,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1: {fileID: 0}
   player2: {fileID: 0}
+  playerPrefab: {fileID: 0}
+  winnerIDNum: 0
   userName: b
   shopPanel: {fileID: 1734870462}
   shopEntryPrefab: {fileID: 1062907732147604, guid: 1964026313bfede42a338cdb3d09ee85,
@@ -2229,6 +2243,8 @@ MonoBehaviour:
   resultText: {fileID: 0}
   totalMoney: 0
   totalMoneyTexts: []
+  player1HealthText: {fileID: 0}
+  player2HealthText: {fileID: 0}
 --- !u!4 &1416993790
 Transform:
   m_ObjectHideFlags: 0

@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IPunObservable
 
     private IEnumerator ShowMeTheMoneyyyyyyyy()
     {
-        string address = "http://10.0.0.34/it490group/PullUserData.php?username=" + userName + "?type=totalMoney";
+        string address = "http://10.0.0.34/it490group/PullUserData.php?username=" + userName + "&type=totalMoney";
         WWW request = new WWW(address);
         yield return request;
         if (!string.IsNullOrEmpty(request.text))
