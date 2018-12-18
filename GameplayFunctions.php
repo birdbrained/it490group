@@ -15,8 +15,8 @@ function ProcessCook($database, $request)
 			$product = $row['product'];
 			break;
 		}
-		PrintCardStats($database, $product);
-		return;
+		$stat = PrintCardStats($database, $product);
+		return $stat;
 	}
 	$s = "select * from CardFusions where base = 'any' and spice = '$spice' and valueReq <= '$valueSum' order by valueReq DESC";
 	$t = mysqli_query($database, $s) or die(mysqli_error($database));
@@ -27,18 +27,18 @@ function ProcessCook($database, $request)
 			$product = $row['product'];
 			break;
 		}
-		PrintCardStats($database, $product);
-		return;
+		$stat = PrintCardStats($database, $product);
+		return $stat;
 	}
 	$s = "select * from Cards where Type = 'Monster' and isFusable = '0' and Value <= '$valueSum' order by Value DESC";
 	$t = mysqli_query($database, $s) or die(mysqli_error($database));
 	while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
 		{
-			$product = $row['product'];
+			$product = $row['Name'];
 			break;
 		}
-		PrintCardStats($database, $product);
-		return;
+		$stat = PrintCardStats($database, $product);
+		return $stat;
 	
 
 }
@@ -59,8 +59,9 @@ function PrintCardStats($database, $cardname)
 		$hp = $row['HP'];
 		$desc = $row['Description'];
 		$img = $row['ImageFilepath'];
-
+		
 		echo $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img;
+		return $id . "|" . $name . "|" . $type . "|" . $att . "|" . $def . "|" . $val . "|" . $fuse . "|" . $hp . "|" . $desc . "|" . $img;
 	}
 }
 ?>
