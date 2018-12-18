@@ -22,6 +22,7 @@ $response = $client->send_request($request);
 //destroy cookie and redirect
 $_SESSION = array();
 session_destroy();
+setcookie("PHPSESSID","",time()-3600,'/',"",0,0);
 echo "You have been logged out.<br>Please wait...";
 header( "refresh:5; url=login.html");
 ?>

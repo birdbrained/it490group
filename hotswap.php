@@ -2,8 +2,9 @@
 class DBi
 {
 	public static $db;
+	public static $successfulConnect = true;
 }
-$successfulConnect = true;
+
 
 function hotswapServer($ip)
 {
@@ -12,34 +13,38 @@ function hotswapServer($ip)
 	echo "scp done\n";
 	exec("ssh -t ankit@" . $ip . " 'mysql -u slave -p ProjectBackup < /var/www/html/it490group/sqlbackup.sql'");
 	echo "dump restored\nstarting server...\n";
-	exec("ssh -t ankit@" . $ip . " '/var/www/html/it490group/RabbitMQServer.php'");
+	exec("sshpass -p 'gohawks2012' ssh -t ankit@" . $ip . " '/var/www/html/it490group/RabbitMQServer.php'");
 	
 	echo "server closed\n";
 }
 
 function sqlDump()
 {
-	exec("ssh -t ankit@" . "10.0.0.33" . " 'sudo mysqldump -u root -p Project > /var/www/html/it490group/sqlbackup.sql'");
+	exec("sshpass -p 'gohawks2012' ssh -t ankit@" . "10.0.0.33" . " 'sudo mysqldump -u root -p Project > /var/www/html/it490group/sqlbackup.sql'");
+	exec("ssh -t ankit@" . "10.0.0.33" . " 'scp /var/www/html/it490group/sqlbackup.sql sq42@10.0.0.34:/var/www/html/it490group/sqlbackup.sql'");
+	echo "scp done\n";
 	echo "took a dump :)\n";
 }
 
 function errorLoop($db, $ip)
 { 
-	//$t = $db->query("select * from VersionControl;");
+	(DBi::$db = mysqli_connect("10.0.0.33", 'user', 'password', 'Project', '3306')) or DBi::$successfulConnect = false;	
+	//$t = $db->query("select * from VersionControl;") or hotswapServer($ip);
 	/*	
 	while ($row = mysqli_fetch_array($t, MYSQLI_ASSOC))
 	{
 		echo "i got a " . $row['status'] . PHP_EOL;
 	}
 	*/
-	if (isset($db))
+	if (DBi::$db)
 	{
 
-		if ($successfulConnect== true)
+		if (DBi::$successfulConnect== true)
 		{
+			sqlDump();
 			echo"zzz... I sleep...\n";
-			sqlDump();			
 			sleep(15);
+			echo"I woke!\n";
 			errorLoop($db, $ip);
 		
 		}
@@ -55,7 +60,7 @@ function errorLoop($db, $ip)
 
 $ip = "10.0.0.35";
 echo "about to connect to mysql\n";
-(DBi::$db = mysqli_connect("10.0.0.33", 'user', 'password', 'Project', '3306')) or $successfulConnect = false;
+(DBi::$db = mysqli_connect("10.0.0.33", 'user', 'password', 'Project', '3306')) or DBi::$successfulConnect = false;
 echo "connection established\n";
 errorLoop(DBi::$db, $ip);
 
