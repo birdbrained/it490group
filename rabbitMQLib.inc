@@ -97,6 +97,7 @@ class rabbitMQServer
 
 	function process_requests($callback)
 	{
+		echo "process_requests start\n";
 		try
 		{
 			$this->callback = $callback;
@@ -106,9 +107,12 @@ class rabbitMQServer
       $params['login'] = $this->USER;
       $params['password'] = $this->PASSWORD;
       $params['vhost'] = $this->VHOST;
+      
+      	echo "about to create AMQPConnection\n";
 			$conn = new AMQPConnection($params);
+			echo "created connection, attemping to connect...\n";
 			$conn->connect();
-
+		echo "amqp connected\n";
 			$channel = new AMQPChannel($conn);
 
 			$exchange = new AMQPExchange($channel);
